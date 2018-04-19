@@ -17,7 +17,7 @@ public class Player {
     private static final int ACCELERATION_RATE = 700;
     private static final int SUN_SIZE = 156;
     private static final int GRAVITY_DISTANCE = 300;
-    private static final int GRAVITY = 5;
+    private static final int GRAVITY = 150;
     private CircleShape circle;
     private Float angle, speed, xSpeed, ySpeed;
 
@@ -36,7 +36,7 @@ public class Player {
         ySpeed = 0f;
         angle = 0f;
 
-        position = new Vector2(0, 0);
+        position = new Vector2(200, 200);
         velocity = new Vector2(0, 0);
         acceleration = new Vector2(0, ACCELERATION_RATE);
 
@@ -82,26 +82,35 @@ public class Player {
     }
 
     public void draw(SpriteBatch batch, float delta) {
-        batch.draw(texture, position.x, position.y, texture.getTexture().getWidth() / 2, texture.getTexture().getHeight() / 2, texture.getTexture().getWidth(), texture.getTexture().getHeight(), 1, 1, angle);
+        batch.draw(
+            texture,
+            position.x - texture.getRegionWidth() / 2,
+            position.y - texture.getRegionHeight() / 2,
+            texture.getTexture().getWidth() / 2,
+            texture.getTexture().getHeight() / 2,
+            texture.getTexture().getWidth(),
+            texture.getTexture().getHeight(),
+            1,
+            1,
+            angle
+        );
     }
 
     public void update(float delta) {
+        float distance = position.dst(0, 0);
+        float angle = position.angle();
+        Vector2 gravity = new Vector2(
+            MathUtils.cos(angle * MathUtils.degreesToRadians) * GRAVITY,
+            MathUtils.sin(angle * MathUtils.degreesToRadians) * GRAVITY
+        ).scl(-delta);
+        velocity.add(gravity);
+/*
         Integer gravityX = ((position.x > SUN_SIZE / 2 && position.x < GRAVITY_DISTANCE) ? - GRAVITY : ((position.x < -SUN_SIZE / 2 && position.x > -GRAVITY_DISTANCE) ? GRAVITY : 0 ));
         Integer gravityY = ((position.y > SUN_SIZE / 2 && position.x < GRAVITY_DISTANCE) ? - GRAVITY : ((position.y < -SUN_SIZE / 2 && position.x > -GRAVITY_DISTANCE) ? GRAVITY : 0 ));
         velocity.add(gravityX, gravityY);
-
+*/
         Vector2 change = new Vector2(velocity).scl(delta);
         position.add(change);
-
-//        Vector2 centerPosition = new Vector2(OrbitalFight.GAME_WIDTH / 2, OrbitalFight.GAME_HEIGHT / 2);
-//        Vector2 playerPosition = new Vector2(x, y);
-//        Vector2 vectDirection = centerPosition.sub(playerPosition).nor();
-//
-//        xSpeed += GRAVITY_SPEED * vectDirection.x * delta;
-//        ySpeed += GRAVITY_SPEED * vectDirection.y * delta;
-//
-//        x += xSpeed * delta;
-//        y += ySpeed * delta;
 
         if (position.x > OrbitalFight.GAME_WIDTH / 2) position.x = -OrbitalFight.GAME_WIDTH / 2;
         if (position.x < -OrbitalFight.GAME_WIDTH / 2) position.x = OrbitalFight.GAME_WIDTH / 2;
