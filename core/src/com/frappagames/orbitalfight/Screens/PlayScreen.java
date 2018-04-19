@@ -4,29 +4,27 @@ import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.Input;
 import com.badlogic.gdx.Screen;
 import com.badlogic.gdx.graphics.GL20;
+import com.badlogic.gdx.graphics.OrthographicCamera;
 import com.badlogic.gdx.graphics.Texture;
-import com.badlogic.gdx.math.Vector2;
-import com.badlogic.gdx.physics.box2d.Box2D;
-import com.badlogic.gdx.physics.box2d.Box2DDebugRenderer;
-import com.badlogic.gdx.physics.box2d.World;
 import com.badlogic.gdx.utils.TimeUtils;
+import com.badlogic.gdx.utils.viewport.FitViewport;
+import com.badlogic.gdx.utils.viewport.Viewport;
 import com.frappagames.orbitalfight.Actors.Player;
 import com.frappagames.orbitalfight.OrbitalFight;
 import com.frappagames.orbitalfight.Utils.GameCamera;
 import com.frappagames.orbitalfight.Utils.GameHud;
 
 public class PlayScreen implements Screen {
-    private Texture background;
+    private Texture background, star;
     private OrbitalFight    game;
 
     private static final int ENERGY_RATE = 10;
     private static final int SHOOTING_RATE = 300;
 
-    private World              world;
-    private Box2DDebugRenderer debugRenderer;
-    private GameCamera camera;
-    private Player player;
-    private GameHud hud;
+    private OrthographicCamera camera;
+    private Viewport   viewport;
+    private Player     player;
+    private GameHud    hud;
 
     private Double energy = 100d;
     private int rocket = 5;
@@ -34,6 +32,10 @@ public class PlayScreen implements Screen {
 
     public PlayScreen(OrbitalFight game) {
         this.game = game;
+
+        camera = new OrthographicCamera();
+        viewport = new FitViewport(OrbitalFight.GAME_WIDTH, OrbitalFight.GAME_HEIGHT, camera);
+        viewport.apply();
 
         hud = new GameHud(game.batch);
         hud.setPlayerMaxLife(100);
@@ -45,17 +47,16 @@ public class PlayScreen implements Screen {
 
     @Override
     public void show() {
-        background = new Texture(Gdx.files.internal("background.jpg"));
-
-        /* BOX 2D */
-        Box2D.init();
-        world = new World(new Vector2(0, 0), true);
-        debugRenderer = new Box2DDebugRenderer();
-
-        player = new Player(world);
+        background = new Texture(Gdx.files.internal("background4.jpg"));
+        star = new Texture(Gdx.files.internal("star3.png"));
+        player = new Player();
     }
 
     private void update(float delta) {
+        if (Gdx.input.isKeyJustPressed(Input.Keys.ESCAPE)) {
+            Gdx.app.exit();
+        }
+
         if (Gdx.input.isKeyPressed(Input.Keys.CONTROL_LEFT)) {
             long now = TimeUtils.millis();
 
@@ -75,10 +76,24 @@ public class PlayScreen implements Screen {
             }
         }
 
+        if (Gdx.input.isKeyPressed(Input.Keys.UP)) {
+            player.forward(delta);
+        }
+
+        if (Gdx.input.isKeyPressed(Input.Keys.LEFT)) {
+            player.turn(delta);
+        }
+
+        if (Gdx.input.isKeyPressed(Input.Keys.RIGHT)) {
+            player.turn(-delta);
+        }
+
         if (energy < 100) {
             energy += delta * ENERGY_RATE;
             hud.setPlayerCurrentEnergy(energy.intValue());
         }
+
+        player.update(delta);
     }
 
     @Override
@@ -87,21 +102,25 @@ public class PlayScreen implements Screen {
 
         Gdx.gl.glClearColor(0, 0, 0, 1);
         Gdx.gl.glClear(GL20.GL_COLOR_BUFFER_BIT);
+
+        camera.update();
+        game.batch.setProjectionMatrix(camera.combined);
+
+        game.batch.begin();
+        game.batch.draw(background, -background.getWidth() / 2, -background.getHeight() / 2);
+        game.batch.draw(star, -star.getWidth() / 2, -star.getHeight() / 2);
+        player.draw(game.batch, delta);
+        game.batch.end();
+
+        // Show HUD
         game.batch.setProjectionMatrix(hud.stage.getCamera().combined);
         hud.stage.act();
         hud.stage.draw();
-
-        game.batch.begin();
-        debugRenderer.render(world, camera.combined);
-//		game.batch.draw(background, 0, 0);
-        game.batch.end();
-
-        world.step(delta, 6, 2);
     }
 
     @Override
     public void resize(int width, int height) {
-        camera.resize(width, height);
+        viewport.update(width,height);
     }
 
     @Override
