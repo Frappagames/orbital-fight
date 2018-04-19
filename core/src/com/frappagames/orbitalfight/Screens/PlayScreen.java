@@ -6,6 +6,7 @@ import com.badlogic.gdx.Screen;
 import com.badlogic.gdx.graphics.GL20;
 import com.badlogic.gdx.graphics.OrthographicCamera;
 import com.badlogic.gdx.graphics.Texture;
+import com.badlogic.gdx.graphics.g2d.ParticleEffect;
 import com.badlogic.gdx.utils.TimeUtils;
 import com.badlogic.gdx.utils.viewport.FitViewport;
 import com.badlogic.gdx.utils.viewport.Viewport;
@@ -30,6 +31,8 @@ public class PlayScreen implements Screen {
     private int rocket = 5;
     private long lastShoot = 0;
 
+    protected ParticleEffect starsEffect;
+
     public PlayScreen(OrbitalFight game) {
         this.game = game;
 
@@ -43,6 +46,11 @@ public class PlayScreen implements Screen {
         hud.setPlayerMaxFuel(100);
         hud.setPlayerMaxEnergy(energy.intValue());
         hud.setPlayerMaxRocket(rocket);
+
+        // Special effect showing flashing stars
+        starsEffect = new ParticleEffect();
+        starsEffect.load(Gdx.files.internal("stars-effect.fx"), Gdx.files.internal(""));
+        starsEffect.setPosition(0, 0);
     }
 
     @Override
@@ -108,8 +116,9 @@ public class PlayScreen implements Screen {
 
         game.batch.begin();
         game.batch.draw(background, -background.getWidth() / 2, -background.getHeight() / 2);
-        game.batch.draw(star, -star.getWidth() / 2, -star.getHeight() / 2);
+        starsEffect.draw(game.batch, delta);
         player.draw(game.batch, delta);
+        game.batch.draw(star, -star.getWidth() / 2, -star.getHeight() / 2);
         game.batch.end();
 
         // Show HUD
@@ -136,5 +145,6 @@ public class PlayScreen implements Screen {
     public void dispose() {
         background.dispose();
         player.dispose();
+        starsEffect.dispose();
     }
 }

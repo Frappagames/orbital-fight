@@ -18,6 +18,8 @@ public class Player {
     private static final int SUN_SIZE = 156;
     private static final int GRAVITY_DISTANCE = 300;
     private static final int GRAVITY = 150;
+    private static final int SHIP_WIDTH = 64;
+    private static final int SHIP_HEIGHT = 57;
     private CircleShape circle;
     private Float angle, speed, xSpeed, ySpeed;
 
@@ -40,7 +42,7 @@ public class Player {
         velocity = new Vector2(0, 0);
         acceleration = new Vector2(0, ACCELERATION_RATE);
 
-        texture = new TextureRegion(new Texture(Gdx.files.internal("ship.png")));
+        texture = new TextureRegion(new Texture(Gdx.files.internal("ships.png")), 0, 0, SHIP_WIDTH, SHIP_HEIGHT);
     }
 
     public void dispose() {
@@ -84,12 +86,12 @@ public class Player {
     public void draw(SpriteBatch batch, float delta) {
         batch.draw(
             texture,
-            position.x - texture.getRegionWidth() / 2,
-            position.y - texture.getRegionHeight() / 2,
-            texture.getTexture().getWidth() / 2,
-            texture.getTexture().getHeight() / 2,
-            texture.getTexture().getWidth(),
-            texture.getTexture().getHeight(),
+            position.x - SHIP_WIDTH / 2,
+            position.y - SHIP_HEIGHT / 2,
+            SHIP_WIDTH / 2,
+            SHIP_HEIGHT / 2,
+            SHIP_WIDTH,
+            SHIP_HEIGHT,
             1,
             1,
             angle
