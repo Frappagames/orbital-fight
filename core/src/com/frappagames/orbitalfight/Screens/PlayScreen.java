@@ -7,6 +7,7 @@ import com.badlogic.gdx.graphics.GL20;
 import com.badlogic.gdx.graphics.OrthographicCamera;
 import com.badlogic.gdx.graphics.Texture;
 import com.badlogic.gdx.graphics.g2d.ParticleEffect;
+import com.badlogic.gdx.math.Circle;
 import com.badlogic.gdx.utils.TimeUtils;
 import com.badlogic.gdx.utils.viewport.FitViewport;
 import com.badlogic.gdx.utils.viewport.Viewport;
@@ -21,17 +22,19 @@ public class PlayScreen implements Screen {
 
     private static final int ENERGY_RATE = 10;
     private static final int SHOOTING_RATE = 300;
+    private static final int STAR_RADIUS = 75;
 
     private OrthographicCamera camera;
     private Viewport   viewport;
-    private Player     player;
+    private Player     player1, player2;
     private GameHud    hud;
 
     private Double energy = 100d;
     private int rocket = 5;
     private long lastShoot = 0;
 
-    protected ParticleEffect starsEffect;
+    private ParticleEffect starsEffect;
+    private Circle starBounds;
 
     public PlayScreen(OrbitalFight game) {
         this.game = game;
@@ -51,13 +54,16 @@ public class PlayScreen implements Screen {
         starsEffect = new ParticleEffect();
         starsEffect.load(Gdx.files.internal("stars-effect.fx"), Gdx.files.internal(""));
         starsEffect.setPosition(0, 0);
+
+        starBounds = new Circle(0, 0, STAR_RADIUS);
     }
 
     @Override
     public void show() {
         background = new Texture(Gdx.files.internal("background4.jpg"));
         star = new Texture(Gdx.files.internal("star3.png"));
-        player = new Player();
+        player1 = new Player(960, 200, 0);
+        player2 = new Player(-960, -200, 1);
     }
 
     private void update(float delta) {
@@ -85,15 +91,27 @@ public class PlayScreen implements Screen {
         }
 
         if (Gdx.input.isKeyPressed(Input.Keys.UP)) {
-            player.forward(delta);
+            player1.forward(delta);
         }
 
         if (Gdx.input.isKeyPressed(Input.Keys.LEFT)) {
-            player.turn(delta);
+            player1.turn(delta);
         }
 
         if (Gdx.input.isKeyPressed(Input.Keys.RIGHT)) {
-            player.turn(-delta);
+            player1.turn(-delta);
+        }
+
+        if (Gdx.input.isKeyPressed(Input.Keys.Z)) {
+            player2.forward(delta);
+        }
+
+        if (Gdx.input.isKeyPressed(Input.Keys.Q)) {
+            player2.turn(delta);
+        }
+
+        if (Gdx.input.isKeyPressed(Input.Keys.D)) {
+            player2.turn(-delta);
         }
 
         if (energy < 100) {
@@ -101,7 +119,20 @@ public class PlayScreen implements Screen {
             hud.setPlayerCurrentEnergy(energy.intValue());
         }
 
-        player.update(delta);
+        player1.update(delta);
+        player2.update(delta);
+
+        if (player1.getBounds().overlaps(starBounds)) {
+            System.out.println("BOOM le Player 1 !!!");
+        }
+
+        if (player2.getBounds().overlaps(starBounds)) {
+            System.out.println("BOOM le Player 2 !!!");
+        }
+
+        if (player1.getBounds().overlaps(player2.getBounds())) {
+            System.out.println("BOOM MEGA-BOOM les 2 !!!");
+        }
     }
 
     @Override
@@ -117,7 +148,8 @@ public class PlayScreen implements Screen {
         game.batch.begin();
         game.batch.draw(background, -background.getWidth() / 2, -background.getHeight() / 2);
         starsEffect.draw(game.batch, delta);
-        player.draw(game.batch, delta);
+        player1.draw(game.batch);
+        player2.draw(game.batch);
         game.batch.draw(star, -star.getWidth() / 2, -star.getHeight() / 2);
         game.batch.end();
 
@@ -144,7 +176,8 @@ public class PlayScreen implements Screen {
     @Override
     public void dispose() {
         background.dispose();
-        player.dispose();
+        player1.dispose();
+        player2.dispose();
         starsEffect.dispose();
     }
 }
