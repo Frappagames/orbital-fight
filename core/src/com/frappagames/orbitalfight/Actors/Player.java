@@ -1,13 +1,14 @@
 package com.frappagames.orbitalfight.Actors;
 
 import com.badlogic.gdx.Gdx;
-import com.badlogic.gdx.graphics.Texture;
+import com.badlogic.gdx.graphics.g2d.Animation;
 import com.badlogic.gdx.graphics.g2d.SpriteBatch;
 import com.badlogic.gdx.graphics.g2d.TextureRegion;
 import com.badlogic.gdx.math.Circle;
 import com.badlogic.gdx.math.MathUtils;
 import com.badlogic.gdx.math.Vector2;
 import com.frappagames.orbitalfight.OrbitalFight;
+import com.frappagames.orbitalfight.Utils.Assets;
 
 
 public class Player {
@@ -21,16 +22,22 @@ public class Player {
 
     private Float angle;
     private Circle bounds;
-    private TextureRegion texture;
+    private TextureRegion texture, currentFrame;
     private Vector2 position, velocity, acceleration;
+    private Animation shipAnimation;
+
+    public Boolean isMooving = false;
+    private float stateTime;
 
     public Player(int x, int y, int shipColor) {
-        angle        = 0f;
-        position     = new Vector2(x, y);
-        velocity     = new Vector2(0, 0);
-        acceleration = new Vector2(0, ACCELERATION_RATE);
-        texture      = new TextureRegion(new Texture(Gdx.files.internal("ships.png")), 0, shipColor * SHIP_HEIGHT, SHIP_WIDTH, SHIP_HEIGHT);
-        bounds       = new Circle(x, y, BOUNDS_RADIUS);
+        angle         = 0f;
+        stateTime     = 0f;
+        position      = new Vector2(x, y);
+        velocity      = new Vector2(0, 0);
+        acceleration  = new Vector2(0, ACCELERATION_RATE);
+        texture       = shipColor == 0 ? Assets.ship1 : Assets.ship2;
+        shipAnimation = shipColor == 0 ? Assets.shipsAnim1 : Assets.shipsAnim2;
+        bounds        = new Circle(x, y, BOUNDS_RADIUS);
     }
 
     public void dispose() {
@@ -61,7 +68,7 @@ public class Player {
 
     public void draw(SpriteBatch batch) {
         batch.draw(
-            texture,
+            currentFrame,
             position.x - SHIP_WIDTH / 2,
             position.y - SHIP_HEIGHT / 2,
             SHIP_WIDTH / 2,
@@ -75,6 +82,12 @@ public class Player {
     }
 
     public void update(float delta) {
+        if (isMooving) {
+            currentFrame = (TextureRegion) shipAnimation.getKeyFrame(stateTime, true);
+        } else {
+            currentFrame = texture;
+        }
+
 //        float distance = position.dst(0, 0);
         float angle = position.angle();
         Vector2 gravity = new Vector2(
@@ -92,6 +105,7 @@ public class Player {
         if (position.y < -OrbitalFight.GAME_HEIGHT / 2) position.y = OrbitalFight.GAME_HEIGHT / 2;
 
         bounds.setPosition(position);
+        stateTime += Gdx.graphics.getDeltaTime();
     }
 
     public Circle getBounds() {

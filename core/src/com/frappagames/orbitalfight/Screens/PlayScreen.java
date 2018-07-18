@@ -90,8 +90,14 @@ public class PlayScreen implements Screen {
             }
         }
 
+        if (Gdx.input.isKeyJustPressed(Input.Keys.UP)) {
+            player1.isMooving = true;
+        }
+
         if (Gdx.input.isKeyPressed(Input.Keys.UP)) {
             player1.forward(delta);
+        } else {
+            player1.isMooving = false;
         }
 
         if (Gdx.input.isKeyPressed(Input.Keys.LEFT)) {
@@ -102,8 +108,13 @@ public class PlayScreen implements Screen {
             player1.turn(-delta);
         }
 
+        if (Gdx.input.isKeyJustPressed(Input.Keys.Z)) {
+            player2.isMooving = true;
+        }
         if (Gdx.input.isKeyPressed(Input.Keys.Z)) {
             player2.forward(delta);
+        } else {
+            player2.isMooving = false;
         }
 
         if (Gdx.input.isKeyPressed(Input.Keys.Q)) {

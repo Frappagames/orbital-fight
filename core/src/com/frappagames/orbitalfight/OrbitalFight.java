@@ -8,6 +8,7 @@ import com.badlogic.gdx.graphics.g2d.Animation;
 import com.badlogic.gdx.graphics.g2d.SpriteBatch;
 import com.badlogic.gdx.graphics.g2d.TextureRegion;
 import com.frappagames.orbitalfight.Screens.PlayScreen;
+import com.frappagames.orbitalfight.Utils.Assets;
 
 public class OrbitalFight extends Game {
 	public static final String GAME_TITLE = "Orbital fight";
@@ -19,6 +20,9 @@ public class OrbitalFight extends Game {
 	@Override
 	public void create () {
 		batch = new SpriteBatch();
+
+		Assets.load();
+
 		this.setScreen(new PlayScreen(this));
 	}
 
