@@ -62,8 +62,8 @@ public class PlayScreen implements Screen {
     public void show() {
         background = new Texture(Gdx.files.internal("background4.jpg"));
         star = new Texture(Gdx.files.internal("star3.png"));
-        player1 = new Player(960, 200, 0);
-        player2 = new Player(-960, -200, 1);
+        player1 = new Player(0);
+        player2 = new Player(1);
     }
 
     private void update(float delta) {
@@ -91,13 +91,13 @@ public class PlayScreen implements Screen {
         }
 
         if (Gdx.input.isKeyJustPressed(Input.Keys.UP)) {
-            player1.isMooving = true;
+            player1.setShipStatus(Player.Status.MOVING);
         }
 
         if (Gdx.input.isKeyPressed(Input.Keys.UP)) {
             player1.forward(delta);
         } else {
-            player1.isMooving = false;
+            player1.setShipStatus(Player.Status.IDLE);
         }
 
         if (Gdx.input.isKeyPressed(Input.Keys.LEFT)) {
@@ -109,12 +109,12 @@ public class PlayScreen implements Screen {
         }
 
         if (Gdx.input.isKeyJustPressed(Input.Keys.Z)) {
-            player2.isMooving = true;
+            player2.setShipStatus(Player.Status.MOVING);
         }
         if (Gdx.input.isKeyPressed(Input.Keys.Z)) {
             player2.forward(delta);
         } else {
-            player2.isMooving = false;
+            player2.setShipStatus(Player.Status.IDLE);
         }
 
         if (Gdx.input.isKeyPressed(Input.Keys.Q)) {
@@ -133,15 +133,23 @@ public class PlayScreen implements Screen {
         player1.update(delta);
         player2.update(delta);
 
-        if (player1.getBounds().overlaps(starBounds)) {
+        if (player1.getShipStatus() != Player.Status.EXPLODING
+                && player1.getBounds().overlaps(starBounds)) {
+            player1.setShipStatus(Player.Status.EXPLODING);
             System.out.println("BOOM le Player 1 !!!");
         }
 
-        if (player2.getBounds().overlaps(starBounds)) {
+        if (player2.getShipStatus() != Player.Status.EXPLODING
+                && player2.getBounds().overlaps(starBounds)) {
+            player2.setShipStatus(Player.Status.EXPLODING);
             System.out.println("BOOM le Player 2 !!!");
         }
 
-        if (player1.getBounds().overlaps(player2.getBounds())) {
+        if (player1.getShipStatus() != Player.Status.EXPLODING
+                && player2.getShipStatus() != Player.Status.EXPLODING
+                && player1.getBounds().overlaps(player2.getBounds())) {
+            player1.setShipStatus(Player.Status.EXPLODING);
+            player2.setShipStatus(Player.Status.EXPLODING);
             System.out.println("BOOM MEGA-BOOM les 2 !!!");
         }
     }

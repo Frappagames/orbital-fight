@@ -19,7 +19,7 @@ import com.badlogic.gdx.scenes.scene2d.utils.TextureRegionDrawable;
  */
 public class Assets {
 //    public static TextureRegionDrawable title;
-    public static Animation shipsAnim1, shipsAnim2;
+    public static Animation shipsAnim1, shipsAnim2, explodeAnimation;
 
     public static TextureRegion ship1, ship2;
 
@@ -49,7 +49,7 @@ public class Assets {
 
         // Ships animation
         Texture sheet = new Texture(Gdx.files.internal("ships.png"));
-        TextureRegion[][] tmp    = TextureRegion.split(sheet, sheet.getWidth()/3, sheet.getHeight()/2);
+        TextureRegion[][] tmp    = TextureRegion.split(sheet, sheet.getWidth() / 3, sheet.getHeight() / 2);
 
         ship1 = tmp[0][0];
         ship2 = tmp[1][0];
@@ -57,12 +57,24 @@ public class Assets {
         TextureRegion[]   frames = new TextureRegion[2];
         frames[0] = tmp[0][1];
         frames[1] = tmp[0][2];
-        shipsAnim1 = new Animation(0.05f, frames);
+        shipsAnim1 = new Animation<TextureRegion>(0.05f, frames);
 
         frames = new TextureRegion[2];
         frames[0] = tmp[1][1];
         frames[1] = tmp[1][2];
-        shipsAnim2 = new Animation(0.05f, frames);
+        shipsAnim2 = new Animation<TextureRegion>(0.05f, frames);
+
+
+        sheet = new Texture(Gdx.files.internal("explosion1.png"));
+        tmp = TextureRegion.split(sheet, sheet.getWidth() / 8, sheet.getHeight() / 4);
+        frames = new TextureRegion[32];
+        int index = 0;
+        for (int i = 0; i < 4; i++) {
+            for (int j = 0; j < 8; j++) {
+                frames[index++] = tmp[i][j];
+            }
+        }
+        explodeAnimation = new Animation<TextureRegion>(0.03125f, frames);
 
     }
 
