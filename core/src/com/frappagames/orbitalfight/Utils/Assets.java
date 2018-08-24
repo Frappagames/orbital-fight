@@ -18,8 +18,13 @@ import com.badlogic.gdx.scenes.scene2d.utils.TextureRegionDrawable;
  * Created by Jérémy MOREAU on 19/08/15.
  */
 public class Assets {
-//    public static TextureRegionDrawable title;
-    public static Animation shipsAnim1, shipsAnim2, explodeAnimation;
+    private static final int ASTEROID1_LINES = 8;
+    private static final int ASTEROID1_ROWS = 4;
+    private static final int EXPLOSION1_LINES = 8;
+    private static final int EXPLOSION1_ROWS = 4;
+
+    public static Texture star, background;
+    public static Animation shipsAnim1, shipsAnim2, explodeAnimation, asteroid1Animation, asteroid2Animation;
 
     public static TextureRegion ship1, ship2;
 
@@ -38,6 +43,10 @@ public class Assets {
 //        itemsAtlas  = new TextureAtlas(Gdx.files.internal("snowflakes.pack"));
 //        title       = new TextureRegionDrawable(itemsAtlas.findRegion("title"));
 
+
+        star = new Texture(Gdx.files.internal("star3.png"));
+        background = new Texture(Gdx.files.internal("background4.jpg"));
+
         // Load Music and sounds
         // Music ♫
 //        music = Gdx.audio.newMusic(Gdx.files.internal("music.ogg"));
@@ -47,8 +56,12 @@ public class Assets {
         // Sounds ♪
 //        clickSound = Gdx.audio.newSound(Gdx.files.internal("sound-click.mp3"));
 
+
+        // ANIMATIONS
+        Texture sheet;
+
         // Ships animation
-        Texture sheet = new Texture(Gdx.files.internal("ships.png"));
+        sheet = new Texture(Gdx.files.internal("ships.png"));
         TextureRegion[][] tmp    = TextureRegion.split(sheet, sheet.getWidth() / 3, sheet.getHeight() / 2);
 
         ship1 = tmp[0][0];
@@ -64,18 +77,41 @@ public class Assets {
         frames[1] = tmp[1][2];
         shipsAnim2 = new Animation<TextureRegion>(0.05f, frames);
 
-
+        // Ship explosion animation
         sheet = new Texture(Gdx.files.internal("explosion1.png"));
-        tmp = TextureRegion.split(sheet, sheet.getWidth() / 8, sheet.getHeight() / 4);
-        frames = new TextureRegion[32];
+        tmp = TextureRegion.split(sheet, sheet.getWidth() / EXPLOSION1_LINES, sheet.getHeight() / EXPLOSION1_ROWS);
+        frames = new TextureRegion[EXPLOSION1_ROWS * EXPLOSION1_LINES];
         int index = 0;
-        for (int i = 0; i < 4; i++) {
-            for (int j = 0; j < 8; j++) {
+        for (int i = 0; i < EXPLOSION1_ROWS; i++) {
+            for (int j = 0; j < EXPLOSION1_LINES; j++) {
                 frames[index++] = tmp[i][j];
             }
         }
         explodeAnimation = new Animation<TextureRegion>(0.03125f, frames);
 
+        // Asteroid animation
+        sheet = new Texture(Gdx.files.internal("asteroid1-1.png"));
+        tmp = TextureRegion.split(sheet, sheet.getWidth() / ASTEROID1_LINES, sheet.getHeight() / ASTEROID1_ROWS);
+        frames = new TextureRegion[ASTEROID1_ROWS * ASTEROID1_LINES];
+        index = 0;
+        for (int i = 0; i < ASTEROID1_ROWS; i++) {
+            for (int j = 0; j < ASTEROID1_LINES; j++) {
+                frames[index++] = tmp[i][j];
+            }
+        }
+        asteroid1Animation = new Animation<TextureRegion>(0.0625f, frames);
+
+        // Asteroid animation
+        sheet = new Texture(Gdx.files.internal("asteroid1-2.png"));
+        tmp = TextureRegion.split(sheet, sheet.getWidth() / ASTEROID1_LINES, sheet.getHeight() / ASTEROID1_ROWS);
+        frames = new TextureRegion[ASTEROID1_ROWS * ASTEROID1_LINES];
+        index = 0;
+        for (int i = 0; i < ASTEROID1_ROWS; i++) {
+            for (int j = 0; j < ASTEROID1_LINES; j++) {
+                frames[index++] = tmp[i][j];
+            }
+        }
+        asteroid2Animation = new Animation<TextureRegion>(0.0625f, frames);
     }
 
     public static void playSound(Sound sound) {
@@ -83,6 +119,8 @@ public class Assets {
     }
 
     public static void dispose() {
+        star.dispose();
+        background.dispose();
 //        itemsAtlas.dispose();
 //        clickSound.dispose();
 //        pickSound.dispose();

@@ -62,8 +62,6 @@ public class Player {
 
         if (this.shipNumber == 0) x += 2 * GAME_WIDTH / 3;
 
-        System.out.println("Ship " + this.shipNumber + " respawn at " + x + ":" + y);
-
         position     = new Vector2(x, y);
         bounds       = new Circle(x, y, BOUNDS_RADIUS);
         currentFrame = texture;
@@ -96,11 +94,12 @@ public class Player {
     }
 
     public void draw(SpriteBatch batch) {
+        update(Gdx.graphics.getDeltaTime());
 
         if (shipStatus == Status.EXPLODING) {
             batch.draw(currentFrame,position.x - SHIP_WIDTH / 2, position.y - SHIP_WIDTH / 2,
                     SHIP_WIDTH / 2,
-                    SHIP_HEIGHT / 2,
+                    SHIP_WIDTH / 2,
                     EXPLOSION_WIDTH,
                     EXPLOSION_HEIGHT, 2, 2, 0
             );
