@@ -17,7 +17,7 @@
    viewBox="0 0 1920 1080"
    id="svg5325"
    sodipodi:docname="ships.svg"
-   inkscape:version="0.91 r13725"
+   inkscape:version="0.92.3 (2405546, 2018-03-11)"
    inkscape:export-filename="/home/gfp/Documents/PERSO/1 - Projets/orbital-fight/orbital-fight/design-sources/ships.png"
    inkscape:export-xdpi="90.357941"
    inkscape:export-ydpi="90.357941">
@@ -43,18 +43,18 @@
      inkscape:pageopacity="0"
      inkscape:pageshadow="2"
      inkscape:window-width="1920"
-     inkscape:window-height="974"
+     inkscape:window-height="1017"
      id="namedview5327"
      showgrid="false"
      showguides="true"
      inkscape:guide-bbox="true"
-     inkscape:zoom="0.70710675"
-     inkscape:cx="-535.25194"
-     inkscape:cy="949.24022"
-     inkscape:window-x="0"
-     inkscape:window-y="0"
+     inkscape:zoom="0.41845701"
+     inkscape:cx="37.87385"
+     inkscape:cy="651.44792"
+     inkscape:window-x="-8"
+     inkscape:window-y="-8"
      inkscape:window-maximized="1"
-     inkscape:current-layer="layer2">
+     inkscape:current-layer="layer1">
     <sodipodi:guide
        position="1935.1003,1734.6461"
        orientation="1,0"
@@ -78,19 +78,23 @@
     <sodipodi:guide
        position="-950.35155,999.84903"
        orientation="0,1"
-       id="guide5949" />
+       id="guide5949"
+       inkscape:locked="false" />
     <sodipodi:guide
        position="-956.71551,970.15054"
        orientation="0,1"
-       id="guide5951" />
+       id="guide5951"
+       inkscape:locked="false" />
     <sodipodi:guide
        position="-999.84903,840.04289"
        orientation="0,1"
-       id="guide5953" />
+       id="guide5953"
+       inkscape:locked="false" />
     <sodipodi:guide
        position="-999.84903,810.3444"
        orientation="0,1"
-       id="guide5955" />
+       id="guide5955"
+       inkscape:locked="false" />
   </sodipodi:namedview>
   <defs
      id="defs3775">
@@ -10116,7 +10120,6 @@
      inkscape:groupmode="layer"
      id="layer1"
      inkscape:label="Background"
-     sodipodi:insensitive="true"
      transform="translate(0,-220)">
     <image
        y="220"
@@ -11911,11 +11914,10 @@
     </g>
     <text
        xml:space="preserve"
-       style="font-style:normal;font-weight:normal;font-size:40px;line-height:125%;font-family:sans-serif;letter-spacing:0px;word-spacing:0px;fill:#000000;fill-opacity:1;stroke:none;stroke-width:1px;stroke-linecap:butt;stroke-linejoin:miter;stroke-opacity:1"
+       style="font-style:normal;font-weight:normal;line-height:0%;font-family:sans-serif;letter-spacing:0px;word-spacing:0px;fill:#000000;fill-opacity:1;stroke:none;stroke-width:1px;stroke-linecap:butt;stroke-linejoin:miter;stroke-opacity:1"
        x="-407.32385"
        y="686.90808"
-       id="text8291"
-       sodipodi:linespacing="125%"><tspan
+       id="text8291"><tspan
          sodipodi:role="line"
          x="-407.32385"
          y="686.90808"
@@ -11923,11 +11925,10 @@
          style="font-size:20px">LIFE</tspan></text>
     <text
        xml:space="preserve"
-       style="font-style:normal;font-weight:normal;font-size:40px;line-height:125%;font-family:sans-serif;letter-spacing:0px;word-spacing:0px;fill:#000000;fill-opacity:1;stroke:none;stroke-width:1px;stroke-linecap:butt;stroke-linejoin:miter;stroke-opacity:1"
+       style="font-style:normal;font-weight:normal;line-height:0%;font-family:sans-serif;letter-spacing:0px;word-spacing:0px;fill:#000000;fill-opacity:1;stroke:none;stroke-width:1px;stroke-linecap:butt;stroke-linejoin:miter;stroke-opacity:1"
        x="-408.39496"
        y="706.52942"
-       id="text8299"
-       sodipodi:linespacing="125%"><tspan
+       id="text8299"><tspan
          sodipodi:role="line"
          id="tspan8301"
          x="-408.39496"
@@ -11935,11 +11936,10 @@
          style="font-size:20px">SHIELD</tspan></text>
     <text
        xml:space="preserve"
-       style="font-style:normal;font-weight:normal;font-size:40px;line-height:125%;font-family:sans-serif;letter-spacing:0px;word-spacing:0px;fill:#000000;fill-opacity:1;stroke:none;stroke-width:1px;stroke-linecap:butt;stroke-linejoin:miter;stroke-opacity:1"
+       style="font-style:normal;font-weight:normal;line-height:0%;font-family:sans-serif;letter-spacing:0px;word-spacing:0px;fill:#000000;fill-opacity:1;stroke:none;stroke-width:1px;stroke-linecap:butt;stroke-linejoin:miter;stroke-opacity:1"
        x="-410.01828"
        y="726.86395"
-       id="text8303"
-       sodipodi:linespacing="125%"><tspan
+       id="text8303"><tspan
          sodipodi:role="line"
          x="-410.01828"
          y="726.86395"
@@ -11947,11 +11947,10 @@
          style="font-size:20px">FUEL</tspan></text>
     <text
        xml:space="preserve"
-       style="font-style:normal;font-weight:normal;font-size:40px;line-height:125%;font-family:sans-serif;letter-spacing:0px;word-spacing:0px;fill:#000000;fill-opacity:1;stroke:none;stroke-width:1px;stroke-linecap:butt;stroke-linejoin:miter;stroke-opacity:1"
+       style="font-style:normal;font-weight:normal;line-height:0%;font-family:sans-serif;letter-spacing:0px;word-spacing:0px;fill:#000000;fill-opacity:1;stroke:none;stroke-width:1px;stroke-linecap:butt;stroke-linejoin:miter;stroke-opacity:1"
        x="-348.5"
        y="758"
-       id="text8311"
-       sodipodi:linespacing="125%"><tspan
+       id="text8311"><tspan
          sodipodi:role="line"
          id="tspan8313"
          x="-348.5"
@@ -11959,11 +11958,10 @@
          style="font-size:20px">ENERGIE</tspan></text>
     <text
        xml:space="preserve"
-       style="font-style:normal;font-weight:normal;font-size:40px;line-height:125%;font-family:sans-serif;letter-spacing:0px;word-spacing:0px;fill:#000000;fill-opacity:1;stroke:none;stroke-width:1px;stroke-linecap:butt;stroke-linejoin:miter;stroke-opacity:1"
+       style="font-style:normal;font-weight:normal;line-height:0%;font-family:sans-serif;letter-spacing:0px;word-spacing:0px;fill:#000000;fill-opacity:1;stroke:none;stroke-width:1px;stroke-linecap:butt;stroke-linejoin:miter;stroke-opacity:1"
        x="-342.5"
        y="779"
-       id="text8315"
-       sodipodi:linespacing="125%"><tspan
+       id="text8315"><tspan
          sodipodi:role="line"
          x="-342.5"
          y="779"
