@@ -27,6 +27,8 @@ public class Player {
     private static final int EXPLOSION_HEIGHT = 64;
     private static final int BOUNDS_RADIUS = 22;
 
+    private static final int FUEL_RATE = 10;
+
     private static final int MAX_LIFE = 500;
     private static final int MAX_SHIELD = 100;
     private static final int MAX_FUEL = 100;
@@ -52,9 +54,6 @@ public class Player {
 
     public Player(int shipNumber) {
         this.shipNumber = shipNumber;
-        this.setCurrentLife(MAX_LIFE);
-        this.setCurrentShield(MAX_SHIELD);
-        this.setCurrentFuel(MAX_FUEL);
         this.setMaxLife(MAX_LIFE);
         this.setMaxShield(MAX_SHIELD);
         this.setMaxFuel(MAX_FUEL);
@@ -118,6 +117,9 @@ public class Player {
         shipStatus       = Status.IDLE;
         velocity         = new Vector2(0, 0);
         acceleration     = new Vector2(0, ACCELERATION_RATE);
+        this.setCurrentLife(MAX_LIFE);
+        this.setCurrentShield(MAX_SHIELD);
+        this.setCurrentFuel(MAX_FUEL);
 
         Random rand = new Random();
         position = new Vector2(rand.nextInt(GAME_WIDTH - SHIP_WIDTH), rand.nextInt(GAME_HEIGHT - SHIP_HEIGHT));
@@ -136,19 +138,23 @@ public class Player {
     }
 
     public void forward(float delta) {
-        acceleration = new Vector2(0, ACCELERATION_RATE).scl(delta).rotate(angle);
-        velocity.add(acceleration);
+        if (getCurrentFuel() > 0) {
+            acceleration = new Vector2(0, ACCELERATION_RATE).scl(delta).rotate(angle);
+            velocity.add(acceleration);
 
-        if (velocity.x > MAX_SPEED) {
-            velocity.x = MAX_SPEED;
-        } else if (velocity.x < -MAX_SPEED) {
-            velocity.x = -MAX_SPEED;
-        }
+            if (velocity.x > MAX_SPEED) {
+                velocity.x = MAX_SPEED;
+            } else if (velocity.x < -MAX_SPEED) {
+                velocity.x = -MAX_SPEED;
+            }
 
-        if (velocity.y > MAX_SPEED) {
-            velocity.y = MAX_SPEED;
-        } else if (velocity.y < -MAX_SPEED) {
-            velocity.y = -MAX_SPEED;
+            if (velocity.y > MAX_SPEED) {
+                velocity.y = MAX_SPEED;
+            } else if (velocity.y < -MAX_SPEED) {
+                velocity.y = -MAX_SPEED;
+            }
+
+            this.currentFuel -= FUEL_RATE * delta;
         }
     }
 
@@ -195,7 +201,7 @@ public class Player {
             }
 
             return;
-        } else if (shipStatus == Status.MOVING) {
+        } else if (shipStatus == Status.MOVING && getCurrentFuel() > 0) {
             currentFrame = (TextureRegion) shipAnimation.getKeyFrame(stateTime, true);
         } else {
             currentFrame = texture;

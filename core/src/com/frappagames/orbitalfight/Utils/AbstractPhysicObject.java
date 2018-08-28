@@ -1,4 +1,4 @@
-package com.frappagames.orbitalfight.Actors;
+package com.frappagames.orbitalfight.Utils;
 
 import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.math.Circle;
