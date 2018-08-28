@@ -3,13 +3,9 @@ package com.frappagames.orbitalfight.Screens;
 import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.Input;
 import com.badlogic.gdx.Screen;
-import com.badlogic.gdx.graphics.Color;
 import com.badlogic.gdx.graphics.GL20;
 import com.badlogic.gdx.graphics.OrthographicCamera;
-import com.badlogic.gdx.graphics.Texture;
 import com.badlogic.gdx.graphics.g2d.ParticleEffect;
-import com.badlogic.gdx.graphics.glutils.ShapeRenderer;
-import com.badlogic.gdx.math.Circle;
 import com.badlogic.gdx.utils.TimeUtils;
 import com.badlogic.gdx.utils.viewport.FitViewport;
 import com.badlogic.gdx.utils.viewport.Viewport;
@@ -18,7 +14,6 @@ import com.frappagames.orbitalfight.Actors.Player;
 import com.frappagames.orbitalfight.Actors.Sun;
 import com.frappagames.orbitalfight.OrbitalFight;
 import com.frappagames.orbitalfight.Utils.Assets;
-import com.frappagames.orbitalfight.Utils.GameCamera;
 import com.frappagames.orbitalfight.Utils.GameHud;
 
 public class PlayScreen implements Screen {
@@ -48,13 +43,6 @@ public class PlayScreen implements Screen {
         viewport = new FitViewport(OrbitalFight.GAME_WIDTH, OrbitalFight.GAME_HEIGHT, camera);
         viewport.apply();
 
-        hud = new GameHud(game.batch);
-        hud.setPlayerMaxLife(100);
-        hud.setPlayerMaxShield(100);
-        hud.setPlayerMaxFuel(100);
-        hud.setPlayerMaxEnergy(energy.intValue());
-        hud.setPlayerMaxRocket(rocket);
-
         // Special effect showing flashing stars
         starsEffect = new ParticleEffect();
         starsEffect.load(Gdx.files.internal("stars-effect.fx"), Gdx.files.internal(""));
@@ -68,6 +56,7 @@ public class PlayScreen implements Screen {
     public void show() {
         player1 = new Player(0);
         player2 = new Player(1);
+        hud = new GameHud(game.batch, player1, player2);
     }
 
     private void update(float delta) {
@@ -81,7 +70,7 @@ public class PlayScreen implements Screen {
             if (energy >= 10 && now > lastShoot + SHOOTING_RATE) {
                 System.out.println("Tir de laser");
                 energy -= 10;
-                hud.setPlayerCurrentEnergy(energy.intValue());
+//                hud.setPlayerCurrentEnergy(energy.intValue());
                 lastShoot = TimeUtils.millis();
             }
         }
@@ -90,7 +79,7 @@ public class PlayScreen implements Screen {
             if (rocket >= 1) {
                 System.out.println("Tir de rocket");
                 rocket--;
-                hud.setPlayerCurrentRocket(rocket);
+//                hud.setPlayerCurrentRocket(rocket);
             }
         }
 
@@ -131,7 +120,7 @@ public class PlayScreen implements Screen {
 
         if (energy < 100) {
             energy += delta * ENERGY_RATE;
-            hud.setPlayerCurrentEnergy(energy.intValue());
+//            hud.setPlayerCurrentEnergy(energy.intValue());
         }
 
         if (player1.getShipStatus() != Player.Status.EXPLODING
@@ -175,9 +164,7 @@ public class PlayScreen implements Screen {
         game.batch.end();
 
         // Show HUD
-        game.batch.setProjectionMatrix(hud.stage.getCamera().combined);
-        hud.stage.act();
-        hud.stage.draw();
+        hud.draw();
     }
 
     @Override

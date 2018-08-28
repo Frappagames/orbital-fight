@@ -27,10 +27,11 @@ public class Assets {
     public static Animation shipsAnim1, shipsAnim2, explodeAnimation, asteroid1Animation, asteroid2Animation;
 
     public static TextureRegion ship1, ship2;
+    public static TextureRegionDrawable player1Stats, player2Stats, lifeSquare, shieldSquare, fuelSquare, emptySquare;
 
 //    public static Sound clickSound, hitSound, pickSound;
 //    public static  Music        music;
-//    private static TextureAtlas itemsAtlas;
+    private static TextureAtlas itemsAtlas;
 
 //    public static Label.LabelStyle fontScore;
 
@@ -39,9 +40,15 @@ public class Assets {
 //        BitmapFont souses20Font = new BitmapFont(Gdx.files.internal("fontScore.fnt"), false);
 //        fontScore = new Label.LabelStyle(souses20Font, Color.WHITE);
 //
-//        // Load Textures
-//        itemsAtlas  = new TextureAtlas(Gdx.files.internal("snowflakes.pack"));
+        // Load Textures
+        itemsAtlas  = new TextureAtlas(Gdx.files.internal("orbital-fight.pack"));
 //        title       = new TextureRegionDrawable(itemsAtlas.findRegion("title"));
+        player1Stats = new TextureRegionDrawable(itemsAtlas.findRegion("player1-stats"));
+        player2Stats = new TextureRegionDrawable(itemsAtlas.findRegion("player2-stats"));
+        lifeSquare = new TextureRegionDrawable(itemsAtlas.findRegion("life-square"));
+        shieldSquare = new TextureRegionDrawable(itemsAtlas.findRegion("shield-square"));
+        fuelSquare = new TextureRegionDrawable(itemsAtlas.findRegion("fuel-square"));
+        emptySquare = new TextureRegionDrawable(itemsAtlas.findRegion("empty-square"));
 
 
         star = new Texture(Gdx.files.internal("star3.png"));

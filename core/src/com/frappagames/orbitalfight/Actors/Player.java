@@ -27,6 +27,10 @@ public class Player {
     private static final int EXPLOSION_HEIGHT = 64;
     private static final int BOUNDS_RADIUS = 22;
 
+    private static final int MAX_LIFE = 500;
+    private static final int MAX_SHIELD = 100;
+    private static final int MAX_FUEL = 100;
+
     private Float angle;
     private Circle bounds;
     private TextureRegion texture, currentFrame;
@@ -39,12 +43,73 @@ public class Player {
     private float  stateTime;
     private int shipNumber;
 
+    private double currentLife;
+    private double currentShield;
+    private double currentFuel;
+    private double maxLife;
+    private double maxShield;
+    private double maxFuel;
+
     public Player(int shipNumber) {
         this.shipNumber = shipNumber;
+        this.setCurrentLife(MAX_LIFE);
+        this.setCurrentShield(MAX_SHIELD);
+        this.setCurrentFuel(MAX_FUEL);
+        this.setMaxLife(MAX_LIFE);
+        this.setMaxShield(MAX_SHIELD);
+        this.setMaxFuel(MAX_FUEL);
         texture          = shipNumber == 0 ? Assets.ship1 : Assets.ship2;
         shipAnimation    = shipNumber == 0 ? Assets.shipsAnim1 : Assets.shipsAnim2;
         explodeAnimation = Assets.explodeAnimation;
         spawn();
+    }
+
+    public double getCurrentLife() {
+        return currentLife;
+    }
+
+    public void setCurrentLife(double currentLife) {
+        this.currentLife = currentLife;
+    }
+
+    public double getCurrentShield() {
+        return currentShield;
+    }
+
+    public void setCurrentShield(double currentShield) {
+        this.currentShield = currentShield;
+    }
+
+    public double getCurrentFuel() {
+        return currentFuel;
+    }
+
+    public void setCurrentFuel(double currentFuel) {
+        this.currentFuel = currentFuel;
+    }
+
+    public double getMaxLife() {
+        return maxLife;
+    }
+
+    public void setMaxLife(double maxLife) {
+        this.maxLife = maxLife;
+    }
+
+    public double getMaxShield() {
+        return maxShield;
+    }
+
+    public void setMaxShield(double maxShield) {
+        this.maxShield = maxShield;
+    }
+
+    public double getMaxFuel() {
+        return maxFuel;
+    }
+
+    public void setMaxFuel(double maxFuel) {
+        this.maxFuel = maxFuel;
     }
 
     private void spawn() {

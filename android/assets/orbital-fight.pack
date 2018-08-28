@@ -1,0 +1,61 @@
+
+orbital-fight.png
+format: RGBA8888
+filter: Nearest,Nearest
+repeat: none
+btn-over
+  rotate: false
+  xy: 1, 174
+  size: 521, 73
+  orig: 521, 73
+  offset: 0, 0
+  index: -1
+btn
+  rotate: false
+  xy: 1, 99
+  size: 521, 73
+  orig: 521, 73
+  offset: 0, 0
+  index: -1
+player1-stats
+  rotate: false
+  xy: 524, 151
+  size: 364, 96
+  orig: 364, 96
+  offset: 0, 0
+  index: -1
+player2-stats
+  rotate: false
+  xy: 1, 1
+  size: 364, 96
+  orig: 364, 96
+  offset: 0, 0
+  index: -1
+empty-square
+  rotate: false
+  xy: 524, 137
+  size: 7, 12
+  orig: 7, 12
+  offset: 0, 0
+  index: -1
+shield-square
+  rotate: false
+  xy: 890, 235
+  size: 7, 12
+  orig: 7, 12
+  offset: 0, 0
+  index: -1
+life-square
+  rotate: false
+  xy: 367, 85
+  size: 7, 12
+  orig: 7, 12
+  offset: 0, 0
+  index: -1
+fuel-square
+  rotate: false
+  xy: 524, 123
+  size: 7, 12
+  orig: 7, 12
+  offset: 0, 0
+  index: -1
