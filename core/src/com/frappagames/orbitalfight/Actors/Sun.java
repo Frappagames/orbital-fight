@@ -23,9 +23,9 @@ public class Sun extends AbstractPhysicObject {
     public void draw(SpriteBatch batch) {
         update(Gdx.graphics.getDeltaTime());
         batch.draw(
-                Assets.star,
-            this.getPosition().x - Assets.star.getWidth() / 2,
-            this.getPosition().y - Assets.star.getHeight() / 2
+                Assets.starTexture,
+            this.getPosition().x - Assets.starTexture.getWidth() / 2,
+            this.getPosition().y - Assets.starTexture.getHeight() / 2
         );
     }
 }

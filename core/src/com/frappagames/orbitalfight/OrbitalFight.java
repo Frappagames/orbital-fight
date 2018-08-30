@@ -34,5 +34,6 @@ public class OrbitalFight extends Game {
 	@Override
 	public void dispose () {
 		batch.dispose();
+		Assets.dispose();
 	}
 }

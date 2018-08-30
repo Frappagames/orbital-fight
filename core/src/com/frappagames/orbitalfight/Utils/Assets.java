@@ -1,15 +1,11 @@
 package com.frappagames.orbitalfight.Utils;
 
 import com.badlogic.gdx.Gdx;
-import com.badlogic.gdx.audio.Music;
 import com.badlogic.gdx.audio.Sound;
-import com.badlogic.gdx.graphics.Color;
 import com.badlogic.gdx.graphics.Texture;
 import com.badlogic.gdx.graphics.g2d.Animation;
-import com.badlogic.gdx.graphics.g2d.BitmapFont;
 import com.badlogic.gdx.graphics.g2d.TextureAtlas;
 import com.badlogic.gdx.graphics.g2d.TextureRegion;
-import com.badlogic.gdx.scenes.scene2d.ui.Label;
 import com.badlogic.gdx.scenes.scene2d.utils.TextureRegionDrawable;
 
 /**
@@ -23,7 +19,7 @@ public class Assets {
     private static final int EXPLOSION1_LINES = 8;
     private static final int EXPLOSION1_ROWS = 4;
 
-    public static Texture star, background;
+    public static Texture starTexture, backgroundTexture, shipsTexture, explosion1Texture, explosion2Texture, asteroid1Texture, asteroid2Texture;
     public static Animation shipsAnim1, shipsAnim2, explodeAnimation, asteroid1Animation, asteroid2Animation;
 
     public static TextureRegion ship1, ship2;
@@ -41,7 +37,15 @@ public class Assets {
 //        fontScore = new Label.LabelStyle(souses20Font, Color.WHITE);
 //
         // Load Textures
-        itemsAtlas  = new TextureAtlas(Gdx.files.internal("orbital-fight.pack"));
+        itemsAtlas        = new TextureAtlas(Gdx.files.internal("orbital-fight.pack"));
+        starTexture       = filter(new Texture(Gdx.files.internal("star3.png")));
+        backgroundTexture = filter(new Texture(Gdx.files.internal("background4.jpg")));
+        shipsTexture      = filter(new Texture(Gdx.files.internal("ships.png")));
+        explosion1Texture = filter(new Texture(Gdx.files.internal("explosion1.png")));
+//        explosion2Texture = filter(new Texture(Gdx.files.internal("explosion2.png")));
+        asteroid1Texture  = filter(new Texture(Gdx.files.internal("asteroid1-1.png")));
+        asteroid2Texture  = filter(new Texture(Gdx.files.internal("asteroid1-2.png")));
+
 //        title       = new TextureRegionDrawable(itemsAtlas.findRegion("title"));
         player1Stats = new TextureRegionDrawable(itemsAtlas.findRegion("player1-stats"));
         player2Stats = new TextureRegionDrawable(itemsAtlas.findRegion("player2-stats"));
@@ -49,10 +53,6 @@ public class Assets {
         shieldSquare = new TextureRegionDrawable(itemsAtlas.findRegion("shield-square"));
         fuelSquare = new TextureRegionDrawable(itemsAtlas.findRegion("fuel-square"));
         emptySquare = new TextureRegionDrawable(itemsAtlas.findRegion("empty-square"));
-
-
-        star = new Texture(Gdx.files.internal("star3.png"));
-        background = new Texture(Gdx.files.internal("background4.jpg"));
 
         // Load Music and sounds
         // Music ♫
@@ -68,8 +68,7 @@ public class Assets {
         Texture sheet;
 
         // Ships animation
-        sheet = new Texture(Gdx.files.internal("ships.png"));
-        TextureRegion[][] tmp    = TextureRegion.split(sheet, sheet.getWidth() / 3, sheet.getHeight() / 2);
+        TextureRegion[][] tmp = TextureRegion.split(shipsTexture, shipsTexture.getWidth() / 3, shipsTexture.getHeight() / 2);
 
         ship1 = tmp[0][0];
         ship2 = tmp[1][0];
@@ -85,8 +84,7 @@ public class Assets {
         shipsAnim2 = new Animation<TextureRegion>(0.05f, frames);
 
         // Ship explosion animation
-        sheet = new Texture(Gdx.files.internal("explosion1.png"));
-        tmp = TextureRegion.split(sheet, sheet.getWidth() / EXPLOSION1_LINES, sheet.getHeight() / EXPLOSION1_ROWS);
+        tmp = TextureRegion.split(explosion1Texture, explosion1Texture.getWidth() / EXPLOSION1_LINES, explosion1Texture.getHeight() / EXPLOSION1_ROWS);
         frames = new TextureRegion[EXPLOSION1_ROWS * EXPLOSION1_LINES];
         int index = 0;
         for (int i = 0; i < EXPLOSION1_ROWS; i++) {
@@ -97,8 +95,7 @@ public class Assets {
         explodeAnimation = new Animation<TextureRegion>(0.03125f, frames);
 
         // Asteroid animation
-        sheet = new Texture(Gdx.files.internal("asteroid1-1.png"));
-        tmp = TextureRegion.split(sheet, sheet.getWidth() / ASTEROID1_LINES, sheet.getHeight() / ASTEROID1_ROWS);
+        tmp = TextureRegion.split(asteroid1Texture, asteroid1Texture.getWidth() / ASTEROID1_LINES, asteroid1Texture.getHeight() / ASTEROID1_ROWS);
         frames = new TextureRegion[ASTEROID1_ROWS * ASTEROID1_LINES];
         index = 0;
         for (int i = 0; i < ASTEROID1_ROWS; i++) {
@@ -109,8 +106,7 @@ public class Assets {
         asteroid1Animation = new Animation<TextureRegion>(0.0625f, frames);
 
         // Asteroid animation
-        sheet = new Texture(Gdx.files.internal("asteroid1-2.png"));
-        tmp = TextureRegion.split(sheet, sheet.getWidth() / ASTEROID1_LINES, sheet.getHeight() / ASTEROID1_ROWS);
+        tmp = TextureRegion.split(asteroid2Texture, asteroid2Texture.getWidth() / ASTEROID1_LINES, asteroid2Texture.getHeight() / ASTEROID1_ROWS);
         frames = new TextureRegion[ASTEROID1_ROWS * ASTEROID1_LINES];
         index = 0;
         for (int i = 0; i < ASTEROID1_ROWS; i++) {
@@ -125,10 +121,25 @@ public class Assets {
 //        if (Settings.soundEnabled) sound.play(1);
     }
 
+    private static Texture filter(Texture texture) {
+//        if (Settings.soundEnabled) {
+        texture.setFilter(Texture.TextureFilter.Linear, Texture.TextureFilter.Linear);
+//        }
+        return texture;
+    }
+
     public static void dispose() {
-        star.dispose();
-        background.dispose();
-//        itemsAtlas.dispose();
+        starTexture.dispose();
+        backgroundTexture.dispose();
+        itemsAtlas.dispose();
+        starTexture.dispose();
+        backgroundTexture.dispose();
+        shipsTexture.dispose();
+        explosion1Texture.dispose();
+//        explosion2Texture.dispose();
+        asteroid1Texture.dispose();
+        asteroid2Texture.dispose();
+        itemsAtlas.dispose();
 //        clickSound.dispose();
 //        pickSound.dispose();
 //        hitSound.dispose();

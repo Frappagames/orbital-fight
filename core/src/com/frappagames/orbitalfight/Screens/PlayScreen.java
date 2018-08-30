@@ -5,6 +5,7 @@ import com.badlogic.gdx.Input;
 import com.badlogic.gdx.Screen;
 import com.badlogic.gdx.graphics.GL20;
 import com.badlogic.gdx.graphics.OrthographicCamera;
+import com.badlogic.gdx.graphics.Texture;
 import com.badlogic.gdx.graphics.g2d.ParticleEffect;
 import com.badlogic.gdx.utils.TimeUtils;
 import com.badlogic.gdx.utils.viewport.FitViewport;
@@ -47,6 +48,7 @@ public class PlayScreen implements Screen {
         starsEffect = new ParticleEffect();
         starsEffect.load(Gdx.files.internal("stars-effect.fx"), Gdx.files.internal(""));
         starsEffect.setPosition(0, 0);
+        starsEffect.getEmitters().first().getSprite().getTexture().setFilter(Texture.TextureFilter.Linear, Texture.TextureFilter.Linear);
 
         asteroid = new Asteroid();
         sun = new Sun();
@@ -149,13 +151,14 @@ public class PlayScreen implements Screen {
         this.update(delta);
 
         Gdx.gl.glClearColor(0, 0, 0, 1);
-        Gdx.gl.glClear(GL20.GL_COLOR_BUFFER_BIT);
+//        Gdx.gl.glClear(GL20.GL_COLOR_BUFFER_BIT);
+        Gdx.gl.glClear(GL20.GL_COLOR_BUFFER_BIT | GL20.GL_DEPTH_BUFFER_BIT | (Gdx.graphics.getBufferFormat().coverageSampling ? GL20.GL_COVERAGE_BUFFER_BIT_NV : 0));
 
         camera.update();
         game.batch.setProjectionMatrix(camera.combined);
 
         game.batch.begin();
-        game.batch.draw(Assets.background, -Assets.background.getWidth() / 2, -Assets.background.getHeight() / 2);
+        game.batch.draw(Assets.backgroundTexture, -Assets.backgroundTexture.getWidth() / 2, -Assets.backgroundTexture.getHeight() / 2);
         starsEffect.draw(game.batch, delta);
         player1.draw(game.batch);
         player2.draw(game.batch);
