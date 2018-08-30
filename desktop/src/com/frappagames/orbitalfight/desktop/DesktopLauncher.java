@@ -11,6 +11,7 @@ public class DesktopLauncher {
 		config.width = OrbitalFight.GAME_WIDTH / 2;
 		config.height = OrbitalFight.GAME_HEIGHT / 2;
 		config.samples = 3;
+		config.useGL30 = true;
 //		config.width = OrbitalFight.GAME_WIDTH;
 //		config.height = OrbitalFight.GAME_HEIGHT;
 //		config.fullscreen = true;
