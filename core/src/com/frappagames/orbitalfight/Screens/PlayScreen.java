@@ -3,7 +3,6 @@ package com.frappagames.orbitalfight.Screens;
 import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.Input;
 import com.badlogic.gdx.Screen;
-import com.badlogic.gdx.graphics.GL20;
 import com.badlogic.gdx.graphics.GL30;
 import com.badlogic.gdx.graphics.OrthographicCamera;
 import com.badlogic.gdx.graphics.Texture;
@@ -23,6 +22,7 @@ public class PlayScreen implements Screen {
 
     private static final int ENERGY_RATE = 10;
     private static final int SHOOTING_RATE = 300;
+    private static final int ASTEROID_RATE = 8;
 
     private OrthographicCamera camera;
     private Viewport   viewport;
@@ -32,11 +32,13 @@ public class PlayScreen implements Screen {
     private Double energy = 100d;
     private int rocket = 5;
     private long lastShoot = 0;
+    private float lastAsteroid1Spawn = 0.0f;
+    private float lastAsteroid2Spawn = 3.0f;
 
     private ParticleEffect starsEffect;
     private Sun            sun;
 
-    private Asteroid asteroid;
+    private Asteroid asteroid1, asteroid2;
 
     public PlayScreen(OrbitalFight game) {
         this.game = game;
@@ -51,7 +53,6 @@ public class PlayScreen implements Screen {
         starsEffect.setPosition(0, 0);
         starsEffect.getEmitters().first().getSprite().getTexture().setFilter(Texture.TextureFilter.Linear, Texture.TextureFilter.Linear);
 
-        asteroid = new Asteroid();
         sun = new Sun();
     }
 
@@ -63,6 +64,18 @@ public class PlayScreen implements Screen {
     }
 
     private void update(float delta) {
+        lastAsteroid1Spawn += delta;
+        if (lastAsteroid1Spawn > ASTEROID_RATE) {
+            lastAsteroid1Spawn = 0;
+            asteroid1 = new Asteroid(1);
+        }
+
+        lastAsteroid2Spawn += delta;
+        if (lastAsteroid2Spawn > ASTEROID_RATE) {
+            lastAsteroid2Spawn = 0;
+            asteroid2 = new Asteroid(2);
+        }
+
         if (Gdx.input.isKeyJustPressed(Input.Keys.ESCAPE)) {
             Gdx.app.exit();
         }
@@ -126,15 +139,17 @@ public class PlayScreen implements Screen {
 //            hud.setPlayerCurrentEnergy(energy.intValue());
         }
 
-        if (player1.getShipStatus() != Player.Status.EXPLODING
+        if (asteroid1 != null && player1.getShipStatus() != Player.Status.EXPLODING
                 && (player1.getBounds().overlaps(sun.getBounds())
-                    || player1.getBounds().overlaps(asteroid.getBounds()))) {
+                || (asteroid1 != null && player1.getBounds().overlaps(asteroid1.getBounds()))
+                || (asteroid2 != null && player1.getBounds().overlaps(asteroid2.getBounds())))) {
             player1.setShipStatus(Player.Status.EXPLODING);
         }
 
         if (player2.getShipStatus() != Player.Status.EXPLODING
                 && (player2.getBounds().overlaps(sun.getBounds())
-                || player2.getBounds().overlaps(asteroid.getBounds()))) {
+                || (asteroid1 != null && player2.getBounds().overlaps(asteroid1.getBounds()))
+                || (asteroid2 != null && player2.getBounds().overlaps(asteroid2.getBounds())))) {
             player2.setShipStatus(Player.Status.EXPLODING);
         }
 
@@ -163,7 +178,8 @@ public class PlayScreen implements Screen {
         starsEffect.draw(game.batch, delta);
         player1.draw(game.batch);
         player2.draw(game.batch);
-        asteroid.draw(game.batch);
+        if (asteroid1 != null) asteroid1.draw(game.batch);
+        if (asteroid2 != null) asteroid2.draw(game.batch);
         sun.draw(game.batch);
         game.batch.end();
 

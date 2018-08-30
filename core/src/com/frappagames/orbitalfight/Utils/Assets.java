@@ -20,7 +20,7 @@ public class Assets {
     private static final int EXPLOSION1_ROWS = 4;
 
     public static Texture starTexture, backgroundTexture, shipsTexture, explosion1Texture, explosion2Texture, asteroid1Texture, asteroid2Texture;
-    public static Animation shipsAnim1, shipsAnim2, explodeAnimation, asteroid1Animation, asteroid2Animation;
+    public static Animation shipsAnim1, shipsAnim2, explodeAnimation, asteroid1Animation, asteroid2Animation, asteroid3Animation;
 
     public static TextureRegion ship1, ship2;
     public static TextureRegionDrawable player1Stats, player2Stats, lifeSquare, shieldSquare, fuelSquare, emptySquare;
