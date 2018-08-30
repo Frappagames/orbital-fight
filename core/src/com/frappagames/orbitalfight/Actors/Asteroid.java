@@ -6,7 +6,6 @@ import com.badlogic.gdx.graphics.g2d.SpriteBatch;
 import com.badlogic.gdx.graphics.g2d.TextureRegion;
 import com.badlogic.gdx.math.MathUtils;
 import com.badlogic.gdx.math.Vector2;
-import com.frappagames.orbitalfight.OrbitalFight;
 import com.frappagames.orbitalfight.Utils.AbstractPhysicObject;
 import com.frappagames.orbitalfight.Utils.Assets;
 
@@ -16,12 +15,16 @@ import java.util.Random;
  * Question :
  * ==========
  *
- * 1. Les astéroids sont-il affectés par la gravité ?
- * 2. Les astéroids réapparessent-ils de l'autre coté de la map quand ils en sortent ?
- * 3. Peut-il y avoir plusieurs astéroids en même temps ?
- * 4. Sont-ils détruit lorsqu'un vaisseau s'écrase sur eux ?
- * 5. Sont-ils destructible par les armes ?
- * 5.1. Si oui, ont-ils de la "vie" ou sont t'il détruit dès le 1er impact ?
+ * --- 1. Les astéroids sont-il affectés par la gravité ? => NON ---
+ * --- 2. Les astéroids réapparessent-ils de l'autre coté de la map quand ils en sortent ? => NON ---
+ * --- 3. Peut-il y avoir plusieurs astéroids en même temps ? => OUI ---
+ *  TODO => 3.1. Ajouter un pool d'astéroid + ajouter 1 ou 2 animations
+ * --- 4. Sont-ils détruit lorsqu'un vaisseau s'écrase sur eux ? => NON ---
+ * TODO : 5. Sont-ils destructible par les armes ? => Oui
+ * TODO : 5.1. Si oui, ont-ils de la "vie" ou sont t'il détruit dès le 1er impact ? Oui, il ont de la vie
+ * TODO : 5.2. Ajouter un SCALE de la taille de l'astéroid + l'appliquer à la vie dont il dispose
+ * TODO : 6. Ils doivent être détruits lors d'un impact avec le soleil
+ * TODO : 7. Ils doivent être détruits lors d'un impact avec un autre astéroid
  */
 
 public class Asteroid extends AbstractPhysicObject {
