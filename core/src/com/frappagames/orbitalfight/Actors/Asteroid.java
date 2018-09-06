@@ -1,9 +1,12 @@
 package com.frappagames.orbitalfight.Actors;
 
 import com.badlogic.gdx.Gdx;
+import com.badlogic.gdx.graphics.Color;
+import com.badlogic.gdx.graphics.GL20;
 import com.badlogic.gdx.graphics.g2d.Animation;
 import com.badlogic.gdx.graphics.g2d.SpriteBatch;
 import com.badlogic.gdx.graphics.g2d.TextureRegion;
+import com.badlogic.gdx.graphics.glutils.ShapeRenderer;
 import com.badlogic.gdx.math.MathUtils;
 import com.badlogic.gdx.math.Vector2;
 import com.frappagames.orbitalfight.Utils.AbstractPhysicObject;
@@ -28,18 +31,28 @@ import java.util.Random;
  */
 
 public class Asteroid extends AbstractPhysicObject {
-    private static final int ASTEROID1_SIZE = 32;
+    private static final int ASTEROID_SIZE  = 128;
+    private static final int BOUNDS_SIZE    = 80;
     private static final int ASTEROID_SPEED = 5;
     private static final int SPAWN_DISTANCE = 1200;
-    private static final int GRAVITY = 0;
+    private static final int ASTEROID_LIFE  = 500;
+    private static final int GRAVITY        = 0;
 
-    private float     stateTime;
+    private float     stateTime, scale, radius;
     private Animation animation;
+    private int       maxLife, currentLife, size;
 
     public Asteroid(int asteroidNumber) {
         stateTime = 0f;
 
         Random rand = new Random();
+
+        scale = rand.nextInt(100) / 100.0f + 0.5f;
+
+        maxLife = MathUtils.round(ASTEROID_LIFE * scale);
+        currentLife = maxLife;
+        size = MathUtils.round(ASTEROID_SIZE * scale);
+        radius = size / 2;
 
         // Set a random position
         int randomPositionAngle = rand.nextInt(360);
@@ -51,7 +64,7 @@ public class Asteroid extends AbstractPhysicObject {
         float xVelocity = MathUtils.cosDeg(randomSpeedAngle) * ASTEROID_SPEED;
         float yVelocity = MathUtils.sinDeg(randomSpeedAngle) * ASTEROID_SPEED;
 
-        this.setPosition(new Vector2(x, y), ASTEROID1_SIZE);
+        this.setPosition(new Vector2(x, y), MathUtils.round(BOUNDS_SIZE * scale));
         this.setVelocity(new Vector2(xVelocity, yVelocity));
         this.setGravityValue(GRAVITY);
         this.setRespawn(false);
@@ -80,8 +93,10 @@ public class Asteroid extends AbstractPhysicObject {
         TextureRegion currentFrame = (TextureRegion) animation.getKeyFrame(stateTime, true);
         batch.draw(
             currentFrame,
-            this.getPosition().x - currentFrame.getRegionWidth() / 2,
-            this.getPosition().y - currentFrame.getRegionHeight() / 2
+            this.getPosition().x - radius,
+            this.getPosition().y - radius,
+            size,
+            size
         );
     }
 }
