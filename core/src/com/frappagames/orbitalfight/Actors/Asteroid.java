@@ -32,7 +32,7 @@ import java.util.Random;
 
 public class Asteroid extends AbstractPhysicObject {
     private static final int ASTEROID_SIZE  = 128;
-    private static final int BOUNDS_SIZE    = 80;
+    private static final int BOUNDS_SIZE    = 45;
     private static final int ASTEROID_SPEED = 5;
     private static final int SPAWN_DISTANCE = 1200;
     private static final int ASTEROID_LIFE  = 500;
