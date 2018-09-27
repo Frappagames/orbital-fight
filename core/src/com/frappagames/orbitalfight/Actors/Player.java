@@ -28,6 +28,7 @@ public class Player {
     private static final int BOUNDS_RADIUS = 22;
 
     private static final int FUEL_RATE = 10;
+    private static final int SHIELD_RESTORATION_RATE = 10;
 
     private static final int MAX_LIFE = 500;
     private static final int MAX_SHIELD = 100;
@@ -118,7 +119,7 @@ public class Player {
         velocity         = new Vector2(0, 0);
         acceleration     = new Vector2(0, ACCELERATION_RATE);
         this.setCurrentLife(MAX_LIFE);
-        this.setCurrentShield(MAX_SHIELD);
+        this.setCurrentShield(0);
         this.setCurrentFuel(MAX_FUEL);
 
         Random rand = new Random();
@@ -201,10 +202,18 @@ public class Player {
             }
 
             return;
-        } else if (shipStatus == Status.MOVING && getCurrentFuel() > 0) {
-            currentFrame = (TextureRegion) shipAnimation.getKeyFrame(stateTime, true);
         } else {
-            currentFrame = texture;
+            if (shipStatus == Status.MOVING && getCurrentFuel() > 0) {
+                currentFrame = (TextureRegion) shipAnimation.getKeyFrame(stateTime, true);
+            } else {
+                currentFrame = texture;
+            }
+
+            if (getCurrentShield() < MAX_SHIELD) {
+                setCurrentShield(getCurrentShield() + SHIELD_RESTORATION_RATE * delta);
+
+                if (getCurrentShield() > MAX_SHIELD) setCurrentShield(MAX_SHIELD);
+            }
         }
 
 //        float distance = position.dst(0, 0);
@@ -239,5 +248,19 @@ public class Player {
 
     public Circle getBounds() {
         return bounds;
+    }
+
+    public void applyDamages(int damageValue) {
+        if (damageValue <= this.currentShield) {
+            this.currentShield = this.currentShield - damageValue;
+        } else {
+            this.currentLife = this.currentLife - (damageValue - this.currentShield);
+            this.currentShield = 0;
+
+            if (this.currentLife <= 0) {
+                this.currentLife = 0;
+                this.setShipStatus(Player.Status.EXPLODING);
+            }
+        }
     }
 }

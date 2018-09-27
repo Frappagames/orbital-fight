@@ -139,25 +139,76 @@ public class PlayScreen implements Screen {
 //            hud.setPlayerCurrentEnergy(energy.intValue());
         }
 
-        if (asteroid1 != null && player1.getShipStatus() != Player.Status.EXPLODING
-                && (player1.getBounds().overlaps(sun.getBounds())
-                || (asteroid1 != null && player1.getBounds().overlaps(asteroid1.getBounds()))
-                || (asteroid2 != null && player1.getBounds().overlaps(asteroid2.getBounds())))) {
-            player1.setShipStatus(Player.Status.EXPLODING);
+        // Check colisions for player 1 (if not already exploding)...
+        if (player1.getShipStatus() != Player.Status.EXPLODING) {
+            /// With sun
+            if (player1.getBounds().overlaps(sun.getBounds())) player1.applyDamages(Integer.MAX_VALUE);
+
+            // With Asteroid 1
+            if (asteroid1 != null && player1.getBounds().overlaps(asteroid1.getBounds())) {
+                int playerLife   = Double.valueOf(player1.getCurrentLife() + player1.getCurrentShield()).intValue();
+                int asteroidLife = Double.valueOf(asteroid1.getCurrentLife()).intValue();
+                asteroid1.applyDamages(playerLife);
+                player1.applyDamages(asteroidLife);
+            }
+
+            // With Asteroid 2
+            if (asteroid2 != null && player1.getBounds().overlaps(asteroid2.getBounds())) {
+                int playerLife   = Double.valueOf(player1.getCurrentLife() + player1.getCurrentShield()).intValue();
+                int asteroidLife = Double.valueOf(asteroid2.getCurrentLife()).intValue();
+                asteroid2.applyDamages(playerLife);
+                player1.applyDamages(asteroidLife);
+            }
         }
 
-        if (player2.getShipStatus() != Player.Status.EXPLODING
-                && (player2.getBounds().overlaps(sun.getBounds())
-                || (asteroid1 != null && player2.getBounds().overlaps(asteroid1.getBounds()))
-                || (asteroid2 != null && player2.getBounds().overlaps(asteroid2.getBounds())))) {
-            player2.setShipStatus(Player.Status.EXPLODING);
+        // Check colisions for player 2 (if not already exploding)...
+        if (player2.getShipStatus() != Player.Status.EXPLODING) {
+            /// With sun
+            if (player2.getBounds().overlaps(sun.getBounds())) player2.applyDamages(Integer.MAX_VALUE);
+
+            // With Asteroid 1
+            if (asteroid1 != null && player2.getBounds().overlaps(asteroid1.getBounds())) {
+                int playerLife   = Double.valueOf(player2.getCurrentLife() + player2.getCurrentShield()).intValue();
+                int asteroidLife = Double.valueOf(asteroid1.getCurrentLife()).intValue();
+                asteroid1.applyDamages(playerLife);
+                player2.applyDamages(asteroidLife);
+            }
+
+            // With Asteroid 2
+            if (asteroid2 != null && player2.getBounds().overlaps(asteroid2.getBounds())) {
+                int playerLife   = Double.valueOf(player2.getCurrentLife() + player2.getCurrentShield()).intValue();
+                int asteroidLife = Double.valueOf(asteroid2.getCurrentLife()).intValue();
+                asteroid2.applyDamages(playerLife);
+                player2.applyDamages(asteroidLife);
+            }
         }
 
+        // Check colisions between the two players
         if (player1.getShipStatus() != Player.Status.EXPLODING
                 && player2.getShipStatus() != Player.Status.EXPLODING
                 && player1.getBounds().overlaps(player2.getBounds())) {
-            player1.setShipStatus(Player.Status.EXPLODING);
-            player2.setShipStatus(Player.Status.EXPLODING);
+            int player1Life   = Double.valueOf(player1.getCurrentLife() + player1.getCurrentShield()).intValue();
+            int player2Life   = Double.valueOf(player2.getCurrentLife() + player2.getCurrentShield()).intValue();
+            player1.applyDamages(player2Life);
+            player2.applyDamages(player1Life);
+        }
+
+        // Check colisions between asteroid1 and sun
+        if (asteroid1 != null && asteroid1.getBounds().overlaps(sun.getBounds())) {
+            asteroid1.applyDamages(Integer.MAX_VALUE);
+        }
+
+        // Check colisions between asteroid2 and sun
+        if (asteroid2 != null && asteroid2.getBounds().overlaps(sun.getBounds())) {
+            asteroid2.applyDamages(Integer.MAX_VALUE);
+        }
+
+        // Check colisions between asteroids
+        if (asteroid1 != null && asteroid2 != null && asteroid1.getBounds().overlaps(asteroid2.getBounds())) {
+            int asteroid1Life   = Double.valueOf(asteroid1.getCurrentLife()).intValue();
+            int asteroid2Life   = Double.valueOf(asteroid2.getCurrentLife()).intValue();
+            asteroid1.applyDamages(asteroid2Life);
+            asteroid2.applyDamages(asteroid1Life);
         }
 
     }
