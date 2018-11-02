@@ -30,9 +30,9 @@ public class Player {
     private static final int FUEL_RATE = 10;
     private static final int SHIELD_RESTORATION_RATE = 10;
 
-    private static final int MAX_LIFE = 500;
-    private static final int MAX_SHIELD = 100;
-    private static final int MAX_FUEL = 100;
+    private static final int MAX_LIFE = 1500;
+    private static final int MAX_SHIELD = 10000;
+    private static final int MAX_FUEL = 1000;
 
     private Float angle;
     private Circle bounds;
@@ -40,7 +40,7 @@ public class Player {
     private Vector2 position, velocity, acceleration;
     private Animation shipAnimation, explodeAnimation;
 
-    public enum Status {IDLE, MOVING, EXPLODING};
+    public enum Status {IDLE, MOVING, EXPLODING}
 
     private Status shipStatus;
     private float  stateTime;
@@ -60,7 +60,7 @@ public class Player {
         this.setMaxFuel(MAX_FUEL);
         texture          = shipNumber == 0 ? Assets.ship1 : Assets.ship2;
         shipAnimation    = shipNumber == 0 ? Assets.shipsAnim1 : Assets.shipsAnim2;
-        explodeAnimation = Assets.explodeAnimation;
+        explodeAnimation = Assets.shipExplosion;
         spawn();
     }
 
@@ -119,7 +119,7 @@ public class Player {
         velocity         = new Vector2(0, 0);
         acceleration     = new Vector2(0, ACCELERATION_RATE);
         this.setCurrentLife(MAX_LIFE);
-        this.setCurrentShield(0);
+        this.setCurrentShield(MAX_SHIELD);
         this.setCurrentFuel(MAX_FUEL);
 
         Random rand = new Random();

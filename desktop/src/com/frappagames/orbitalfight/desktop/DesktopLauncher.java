@@ -12,9 +12,6 @@ public class DesktopLauncher {
 		config.height = OrbitalFight.GAME_HEIGHT / 2;
 		config.samples = 3;
 		config.useGL30 = true;
-//		config.width = OrbitalFight.GAME_WIDTH;
-//		config.height = OrbitalFight.GAME_HEIGHT;
-//		config.fullscreen = true;
 		new LwjglApplication(new OrbitalFight(), config);
 	}
 }

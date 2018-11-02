@@ -34,12 +34,17 @@ public class Asteroid extends AbstractPhysicObject {
     private static final int SPAWN_DISTANCE = 1200;
     private static final int ASTEROID_LIFE  = 500;
     private static final int GRAVITY        = 0;
+    private static final int MAX_LIFETIME   = 8;
 
+    public enum Status {MOVING, EXPLODING}
+
+    private Status    asteroidStatus;
     private float     stateTime;
     private float     radius;
-    private Animation animation;
+    private Animation animation, explosion;
     private int       currentLife;
     private int       size;
+    private float     lifetime;
 
     public Asteroid(int asteroidNumber) {
         this.setGravityValue(GRAVITY);
@@ -56,11 +61,15 @@ public class Asteroid extends AbstractPhysicObject {
                 animation = Assets.asteroid1Animation;
         }
 
+        explosion = Assets.asteroidExplosion;
+
         this.init();
     }
 
     private void init() {
+        asteroidStatus = Status.MOVING;
         stateTime = 0f;
+        lifetime = 0.0f;
         Random rand = new Random();
 
         float scale = rand.nextInt(100) / 100.0f + 0.5f;
@@ -87,20 +96,46 @@ public class Asteroid extends AbstractPhysicObject {
 
     public void update(float delta) {
         super.update(delta);
+
+        // If the asteroid has been around for too long, regenerate it
+        lifetime += delta;
+        if (lifetime > MAX_LIFETIME) {
+            this.init();
+        }
+
+        // Reinitialize the asteroid when totaly exploded
+        if (asteroidStatus == Status.EXPLODING && explosion.isAnimationFinished(stateTime)) {
+            this.init();
+        }
     }
 
     public void draw(SpriteBatch batch) {
         update(Gdx.graphics.getDeltaTime());
 
         stateTime += Gdx.graphics.getDeltaTime();
-        TextureRegion currentFrame = (TextureRegion) animation.getKeyFrame(stateTime, true);
-        batch.draw(
-            currentFrame,
-            this.getPosition().x - radius,
-            this.getPosition().y - radius,
-            size,
-            size
-        );
+        if (asteroidStatus == Status.EXPLODING) {
+            TextureRegion currentFrame = (TextureRegion) explosion.getKeyFrame(stateTime, false);
+            batch.draw(
+                    currentFrame,
+                    this.getPosition().x - radius,
+                    this.getPosition().y - radius,
+                    size,
+                    size
+            );
+        } else {
+            TextureRegion currentFrame = (TextureRegion) animation.getKeyFrame(stateTime, true);
+            batch.draw(
+                    currentFrame,
+                    this.getPosition().x - radius,
+                    this.getPosition().y - radius,
+                    size,
+                    size
+            );
+        }
+    }
+
+    public Status getAsteroidStatus() {
+        return asteroidStatus;
     }
 
     public int getCurrentLife() {
@@ -111,8 +146,9 @@ public class Asteroid extends AbstractPhysicObject {
         this.currentLife = this.currentLife - damageValue;
 
         if (this.getCurrentLife() <= 0) {
-//            this.setShipStatus(Player.Status.EXPLODING);
-            this.init();
+            asteroidStatus = Status.EXPLODING;
+            stateTime = 0f;
+            this.setVelocity(new Vector2(0, 0));
         }
     }
 }

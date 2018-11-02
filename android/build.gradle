@@ -1,6 +1,6 @@
 android {
-    buildToolsVersion "27.0.3"
-    compileSdkVersion 27
+    buildToolsVersion "28.0.3"
+    compileSdkVersion 28
     sourceSets {
         main {
             manifest.srcFile 'AndroidManifest.xml'
@@ -19,8 +19,8 @@ android {
     }
     defaultConfig {
         applicationId "com.frappagames.orbitalfight"
-        minSdkVersion 8
-        targetSdkVersion 27
+        minSdkVersion 23
+        targetSdkVersion 28
     }
 }
 
@@ -85,8 +85,8 @@ eclipse {
     }
 
     jdt {
-        sourceCompatibility = 1.6
-        targetCompatibility = 1.6
+        sourceCompatibility = 1.8
+        targetCompatibility = 1.8
     }
 
     classpath {

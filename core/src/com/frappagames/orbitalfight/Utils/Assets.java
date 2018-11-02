@@ -14,13 +14,15 @@ import com.badlogic.gdx.scenes.scene2d.utils.TextureRegionDrawable;
  * Created by Jérémy MOREAU on 19/08/15.
  */
 public class Assets {
-    private static final int ASTEROID1_LINES = 8;
+    private static final int ASTEROID1_COLS = 8;
     private static final int ASTEROID1_ROWS = 4;
-    private static final int EXPLOSION1_LINES = 8;
+    private static final int EXPLOSION1_COLS = 8;
     private static final int EXPLOSION1_ROWS = 4;
+    private static final int EXPLOSION2_COLS = 8;
+    private static final int EXPLOSION2_ROWS = 6;
 
     public static Texture starTexture, backgroundTexture, shipsTexture, explosion1Texture, explosion2Texture, asteroid1Texture, asteroid2Texture;
-    public static Animation shipsAnim1, shipsAnim2, explodeAnimation, asteroid1Animation, asteroid2Animation, asteroid3Animation;
+    public static Animation shipsAnim1, shipsAnim2, shipExplosion, asteroidExplosion, asteroid1Animation, asteroid2Animation, asteroid3Animation;
 
     public static TextureRegion ship1, ship2;
     public static TextureRegionDrawable player1Stats, player2Stats, lifeSquare, shieldSquare, fuelSquare, emptySquare;
@@ -42,7 +44,7 @@ public class Assets {
         backgroundTexture = filter(new Texture(Gdx.files.internal("background4.jpg")));
         shipsTexture      = filter(new Texture(Gdx.files.internal("ships.png")));
         explosion1Texture = filter(new Texture(Gdx.files.internal("explosion1.png")));
-//        explosion2Texture = filter(new Texture(Gdx.files.internal("explosion2.png")));
+        explosion2Texture = filter(new Texture(Gdx.files.internal("explosion2.png")));
         asteroid1Texture  = filter(new Texture(Gdx.files.internal("asteroid1-1.png")));
         asteroid2Texture  = filter(new Texture(Gdx.files.internal("asteroid1-2.png")));
 
@@ -76,45 +78,56 @@ public class Assets {
         TextureRegion[]   frames = new TextureRegion[2];
         frames[0] = tmp[0][1];
         frames[1] = tmp[0][2];
-        shipsAnim1 = new Animation<TextureRegion>(0.05f, frames);
+        shipsAnim1 = new Animation<>(0.05f, frames);
 
         frames = new TextureRegion[2];
         frames[0] = tmp[1][1];
         frames[1] = tmp[1][2];
-        shipsAnim2 = new Animation<TextureRegion>(0.05f, frames);
+        shipsAnim2 = new Animation<>(0.05f, frames);
 
         // Ship explosion animation
-        tmp = TextureRegion.split(explosion1Texture, explosion1Texture.getWidth() / EXPLOSION1_LINES, explosion1Texture.getHeight() / EXPLOSION1_ROWS);
-        frames = new TextureRegion[EXPLOSION1_ROWS * EXPLOSION1_LINES];
+        tmp = TextureRegion.split(explosion1Texture, explosion1Texture.getWidth() / EXPLOSION1_COLS, explosion1Texture.getHeight() / EXPLOSION1_ROWS);
+        frames = new TextureRegion[EXPLOSION1_ROWS * EXPLOSION1_COLS];
         int index = 0;
         for (int i = 0; i < EXPLOSION1_ROWS; i++) {
-            for (int j = 0; j < EXPLOSION1_LINES; j++) {
+            for (int j = 0; j < EXPLOSION1_COLS; j++) {
                 frames[index++] = tmp[i][j];
             }
         }
-        explodeAnimation = new Animation<TextureRegion>(0.03125f, frames);
+        shipExplosion = new Animation<>(0.03125f, frames);
+
+        // Asteroid explosion animation
+        tmp = TextureRegion.split(explosion2Texture, explosion2Texture.getWidth() / EXPLOSION2_COLS, explosion2Texture.getHeight() / EXPLOSION2_ROWS);
+        frames = new TextureRegion[EXPLOSION2_ROWS * EXPLOSION2_COLS];
+        index = 0;
+        for (int i = 0; i < EXPLOSION2_ROWS; i++) {
+            for (int j = 0; j < EXPLOSION2_COLS; j++) {
+                frames[index++] = tmp[i][j];
+            }
+        }
+        asteroidExplosion = new Animation<>(0.03125f, frames);
 
         // Asteroid animation
-        tmp = TextureRegion.split(asteroid1Texture, asteroid1Texture.getWidth() / ASTEROID1_LINES, asteroid1Texture.getHeight() / ASTEROID1_ROWS);
-        frames = new TextureRegion[ASTEROID1_ROWS * ASTEROID1_LINES];
+        tmp = TextureRegion.split(asteroid1Texture, asteroid1Texture.getWidth() / ASTEROID1_COLS, asteroid1Texture.getHeight() / ASTEROID1_ROWS);
+        frames = new TextureRegion[ASTEROID1_ROWS * ASTEROID1_COLS];
         index = 0;
         for (int i = 0; i < ASTEROID1_ROWS; i++) {
-            for (int j = 0; j < ASTEROID1_LINES; j++) {
+            for (int j = 0; j < ASTEROID1_COLS; j++) {
                 frames[index++] = tmp[i][j];
             }
         }
-        asteroid1Animation = new Animation<TextureRegion>(0.0625f, frames);
+        asteroid1Animation = new Animation<>(0.0625f, frames);
 
         // Asteroid animation
-        tmp = TextureRegion.split(asteroid2Texture, asteroid2Texture.getWidth() / ASTEROID1_LINES, asteroid2Texture.getHeight() / ASTEROID1_ROWS);
-        frames = new TextureRegion[ASTEROID1_ROWS * ASTEROID1_LINES];
+        tmp = TextureRegion.split(asteroid2Texture, asteroid2Texture.getWidth() / ASTEROID1_COLS, asteroid2Texture.getHeight() / ASTEROID1_ROWS);
+        frames = new TextureRegion[ASTEROID1_ROWS * ASTEROID1_COLS];
         index = 0;
         for (int i = 0; i < ASTEROID1_ROWS; i++) {
-            for (int j = 0; j < ASTEROID1_LINES; j++) {
+            for (int j = 0; j < ASTEROID1_COLS; j++) {
                 frames[index++] = tmp[i][j];
             }
         }
-        asteroid2Animation = new Animation<TextureRegion>(0.0625f, frames);
+        asteroid2Animation = new Animation<>(0.0625f, frames);
     }
 
     public static void playSound(Sound sound) {

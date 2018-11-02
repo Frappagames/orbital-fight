@@ -22,7 +22,6 @@ public class PlayScreen implements Screen {
 
     private static final int ENERGY_RATE = 10;
     private static final int SHOOTING_RATE = 300;
-    private static final int ASTEROID_RATE = 8;
 
     private OrthographicCamera camera;
     private Viewport   viewport;
@@ -32,8 +31,6 @@ public class PlayScreen implements Screen {
     private Double energy = 100d;
     private int rocket = 5;
     private long lastShoot = 0;
-    private float lastAsteroid1Spawn = 0.0f;
-    private float lastAsteroid2Spawn = 3.0f;
 
     private ParticleEffect starsEffect;
     private Sun            sun;
@@ -54,6 +51,8 @@ public class PlayScreen implements Screen {
         starsEffect.getEmitters().first().getSprite().getTexture().setFilter(Texture.TextureFilter.Linear, Texture.TextureFilter.Linear);
 
         sun = new Sun();
+        asteroid1 = new Asteroid(1);
+        asteroid2 = new Asteroid(2);
     }
 
     @Override
@@ -64,18 +63,6 @@ public class PlayScreen implements Screen {
     }
 
     private void update(float delta) {
-        lastAsteroid1Spawn += delta;
-        if (lastAsteroid1Spawn > ASTEROID_RATE) {
-            lastAsteroid1Spawn = 0;
-            asteroid1 = new Asteroid(1);
-        }
-
-        lastAsteroid2Spawn += delta;
-        if (lastAsteroid2Spawn > ASTEROID_RATE) {
-            lastAsteroid2Spawn = 0;
-            asteroid2 = new Asteroid(2);
-        }
-
         if (Gdx.input.isKeyJustPressed(Input.Keys.ESCAPE)) {
             Gdx.app.exit();
         }
@@ -86,7 +73,6 @@ public class PlayScreen implements Screen {
             if (energy >= 10 && now > lastShoot + SHOOTING_RATE) {
                 System.out.println("Tir de laser");
                 energy -= 10;
-//                hud.setPlayerCurrentEnergy(energy.intValue());
                 lastShoot = TimeUtils.millis();
             }
         }
@@ -95,7 +81,6 @@ public class PlayScreen implements Screen {
             if (rocket >= 1) {
                 System.out.println("Tir de rocket");
                 rocket--;
-//                hud.setPlayerCurrentRocket(rocket);
             }
         }
 
@@ -136,7 +121,6 @@ public class PlayScreen implements Screen {
 
         if (energy < 100) {
             energy += delta * ENERGY_RATE;
-//            hud.setPlayerCurrentEnergy(energy.intValue());
         }
 
         // Check colisions for player 1 (if not already exploding)...
@@ -145,7 +129,7 @@ public class PlayScreen implements Screen {
             if (player1.getBounds().overlaps(sun.getBounds())) player1.applyDamages(Integer.MAX_VALUE);
 
             // With Asteroid 1
-            if (asteroid1 != null && player1.getBounds().overlaps(asteroid1.getBounds())) {
+            if (player1.getBounds().overlaps(asteroid1.getBounds())) {
                 int playerLife   = Double.valueOf(player1.getCurrentLife() + player1.getCurrentShield()).intValue();
                 int asteroidLife = Double.valueOf(asteroid1.getCurrentLife()).intValue();
                 asteroid1.applyDamages(playerLife);
@@ -153,7 +137,7 @@ public class PlayScreen implements Screen {
             }
 
             // With Asteroid 2
-            if (asteroid2 != null && player1.getBounds().overlaps(asteroid2.getBounds())) {
+            if (player1.getBounds().overlaps(asteroid2.getBounds())) {
                 int playerLife   = Double.valueOf(player1.getCurrentLife() + player1.getCurrentShield()).intValue();
                 int asteroidLife = Double.valueOf(asteroid2.getCurrentLife()).intValue();
                 asteroid2.applyDamages(playerLife);
@@ -167,7 +151,7 @@ public class PlayScreen implements Screen {
             if (player2.getBounds().overlaps(sun.getBounds())) player2.applyDamages(Integer.MAX_VALUE);
 
             // With Asteroid 1
-            if (asteroid1 != null && player2.getBounds().overlaps(asteroid1.getBounds())) {
+            if (asteroid1.getAsteroidStatus() != Asteroid.Status.EXPLODING && player2.getBounds().overlaps(asteroid1.getBounds())) {
                 int playerLife   = Double.valueOf(player2.getCurrentLife() + player2.getCurrentShield()).intValue();
                 int asteroidLife = Double.valueOf(asteroid1.getCurrentLife()).intValue();
                 asteroid1.applyDamages(playerLife);
@@ -175,7 +159,7 @@ public class PlayScreen implements Screen {
             }
 
             // With Asteroid 2
-            if (asteroid2 != null && player2.getBounds().overlaps(asteroid2.getBounds())) {
+            if (asteroid2.getAsteroidStatus() != Asteroid.Status.EXPLODING && player2.getBounds().overlaps(asteroid2.getBounds())) {
                 int playerLife   = Double.valueOf(player2.getCurrentLife() + player2.getCurrentShield()).intValue();
                 int asteroidLife = Double.valueOf(asteroid2.getCurrentLife()).intValue();
                 asteroid2.applyDamages(playerLife);
@@ -194,17 +178,18 @@ public class PlayScreen implements Screen {
         }
 
         // Check colisions between asteroid1 and sun
-        if (asteroid1 != null && asteroid1.getBounds().overlaps(sun.getBounds())) {
+        if (asteroid1.getBounds().overlaps(sun.getBounds()) && asteroid1.getAsteroidStatus() != Asteroid.Status.EXPLODING) {
             asteroid1.applyDamages(Integer.MAX_VALUE);
         }
 
         // Check colisions between asteroid2 and sun
-        if (asteroid2 != null && asteroid2.getBounds().overlaps(sun.getBounds())) {
+        if (asteroid2.getBounds().overlaps(sun.getBounds()) && asteroid2.getAsteroidStatus() != Asteroid.Status.EXPLODING) {
             asteroid2.applyDamages(Integer.MAX_VALUE);
         }
 
         // Check colisions between asteroids
-        if (asteroid1 != null && asteroid2 != null && asteroid1.getBounds().overlaps(asteroid2.getBounds())) {
+        if (asteroid1.getAsteroidStatus() != Asteroid.Status.EXPLODING && asteroid2.getAsteroidStatus() != Asteroid.Status.EXPLODING
+                && asteroid1.getBounds().overlaps(asteroid2.getBounds())) {
             int asteroid1Life   = Double.valueOf(asteroid1.getCurrentLife()).intValue();
             int asteroid2Life   = Double.valueOf(asteroid2.getCurrentLife()).intValue();
             asteroid1.applyDamages(asteroid2Life);
@@ -218,20 +203,32 @@ public class PlayScreen implements Screen {
         this.update(delta);
 
         Gdx.gl.glClearColor(0, 0, 0, 1);
-//        Gdx.gl.glClear(GL30.GL_COLOR_BUFFER_BIT);
         Gdx.gl.glClear(GL30.GL_COLOR_BUFFER_BIT | GL30.GL_DEPTH_BUFFER_BIT | (Gdx.graphics.getBufferFormat().coverageSampling ? GL30.GL_COVERAGE_BUFFER_BIT_NV : 0));
 
         camera.update();
         game.batch.setProjectionMatrix(camera.combined);
 
+        // === Begin rendering ===
         game.batch.begin();
+
+        // BACKGROUND
         game.batch.draw(Assets.backgroundTexture, -Assets.backgroundTexture.getWidth() / 2, -Assets.backgroundTexture.getHeight() / 2);
+
+        // EFFECTS
         starsEffect.draw(game.batch, delta);
+
+        // PLAYERS
         player1.draw(game.batch);
         player2.draw(game.batch);
-        if (asteroid1 != null) asteroid1.draw(game.batch);
-        if (asteroid2 != null) asteroid2.draw(game.batch);
+
+        // SUN
         sun.draw(game.batch);
+
+        // ASTEROIDS
+        asteroid1.draw(game.batch);
+        asteroid2.draw(game.batch);
+
+        // === End rendering ===
         game.batch.end();
 
         // Show HUD
