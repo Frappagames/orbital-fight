@@ -7,7 +7,6 @@ import com.badlogic.gdx.graphics.GL30;
 import com.badlogic.gdx.graphics.OrthographicCamera;
 import com.badlogic.gdx.graphics.Texture;
 import com.badlogic.gdx.graphics.g2d.ParticleEffect;
-import com.badlogic.gdx.utils.TimeUtils;
 import com.badlogic.gdx.utils.viewport.FitViewport;
 import com.badlogic.gdx.utils.viewport.Viewport;
 import com.frappagames.orbitalfight.Actors.Asteroid;
@@ -19,18 +18,12 @@ import com.frappagames.orbitalfight.Utils.GameHud;
 
 public class PlayScreen implements Screen {
     private OrbitalFight    game;
-
-    private static final int ENERGY_RATE = 10;
-    private static final int SHOOTING_RATE = 300;
-
     private OrthographicCamera camera;
     private Viewport   viewport;
     private Player     player1, player2;
     private GameHud    hud;
 
-    private Double energy = 100d;
     private int rocket = 5;
-    private long lastShoot = 0;
 
     private ParticleEffect starsEffect;
     private Sun            sun;
@@ -63,27 +56,44 @@ public class PlayScreen implements Screen {
     }
 
     private void update(float delta) {
+        // Sortie du jeu
         if (Gdx.input.isKeyJustPressed(Input.Keys.ESCAPE)) {
             Gdx.app.exit();
         }
 
-        if (Gdx.input.isKeyPressed(Input.Keys.CONTROL_LEFT)) {
-            long now = TimeUtils.millis();
-
-            if (energy >= 10 && now > lastShoot + SHOOTING_RATE) {
-                System.out.println("Tir de laser");
-                energy -= 10;
-                lastShoot = TimeUtils.millis();
-            }
+        //****************************************************************************************//
+        //                                     CONTRÔLE DES TIRS                                  //
+        //****************************************************************************************//
+        // Joueur 1 : Lasers
+        if (Gdx.input.isKeyPressed(Input.Keys.CONTROL_RIGHT)) {
+            player1.laserShot();
         }
 
-        if (Gdx.input.isKeyJustPressed(Input.Keys.SPACE)) {
+        // Joueur 1 : Rockettes
+        if (Gdx.input.isKeyJustPressed(Input.Keys.SHIFT_RIGHT)) {
             if (rocket >= 1) {
-                System.out.println("Tir de rocket");
+                System.out.println("Joueur 1 : Tir de rocket");
                 rocket--;
             }
         }
 
+        // Joueur 2 : Lasers
+        if (Gdx.input.isKeyPressed(Input.Keys.CONTROL_LEFT)) {
+            player2.laserShot();
+        }
+
+        // Joueur 2 : Rockettes
+        if (Gdx.input.isKeyJustPressed(Input.Keys.SHIFT_LEFT)) {
+            if (rocket >= 1) {
+                System.out.println("Joueur 2 : Tir de rocket");
+                rocket--;
+            }
+        }
+
+        //****************************************************************************************//
+        //                                CONTRÔLE DES DÉPLACEMENTS                               //
+        //****************************************************************************************//
+        // Joueur 1
         if (Gdx.input.isKeyJustPressed(Input.Keys.UP)) {
             player1.setShipStatus(Player.Status.MOVING);
         }
@@ -96,15 +106,15 @@ public class PlayScreen implements Screen {
 
         if (Gdx.input.isKeyPressed(Input.Keys.LEFT)) {
             player1.turn(delta);
-        }
-
-        if (Gdx.input.isKeyPressed(Input.Keys.RIGHT)) {
+        } else if (Gdx.input.isKeyPressed(Input.Keys.RIGHT)) {
             player1.turn(-delta);
         }
 
+        // Joueur 2
         if (Gdx.input.isKeyJustPressed(Input.Keys.Z)) {
             player2.setShipStatus(Player.Status.MOVING);
         }
+
         if (Gdx.input.isKeyPressed(Input.Keys.Z)) {
             player2.forward(delta);
         } else {
@@ -113,15 +123,14 @@ public class PlayScreen implements Screen {
 
         if (Gdx.input.isKeyPressed(Input.Keys.Q)) {
             player2.turn(delta);
-        }
-
-        if (Gdx.input.isKeyPressed(Input.Keys.D)) {
+        } else if (Gdx.input.isKeyPressed(Input.Keys.D)) {
             player2.turn(-delta);
         }
 
-        if (energy < 100) {
-            energy += delta * ENERGY_RATE;
-        }
+
+        //****************************************************************************************//
+        //                                 CONTRÔLE DES COLLISIONS                                //
+        //****************************************************************************************//
 
         // Check colisions for player 1 (if not already exploding)...
         if (player1.getShipStatus() != Player.Status.EXPLODING) {
@@ -129,7 +138,7 @@ public class PlayScreen implements Screen {
             if (player1.getBounds().overlaps(sun.getBounds())) player1.applyDamages(Integer.MAX_VALUE);
 
             // With Asteroid 1
-            if (player1.getBounds().overlaps(asteroid1.getBounds())) {
+            if (asteroid1.getAsteroidStatus() != Asteroid.Status.EXPLODING && player1.getBounds().overlaps(asteroid1.getBounds())) {
                 int playerLife   = Double.valueOf(player1.getCurrentLife() + player1.getCurrentShield()).intValue();
                 int asteroidLife = Double.valueOf(asteroid1.getCurrentLife()).intValue();
                 asteroid1.applyDamages(playerLife);
@@ -137,7 +146,7 @@ public class PlayScreen implements Screen {
             }
 
             // With Asteroid 2
-            if (player1.getBounds().overlaps(asteroid2.getBounds())) {
+            if (asteroid2.getAsteroidStatus() != Asteroid.Status.EXPLODING && player1.getBounds().overlaps(asteroid2.getBounds())) {
                 int playerLife   = Double.valueOf(player1.getCurrentLife() + player1.getCurrentShield()).intValue();
                 int asteroidLife = Double.valueOf(asteroid2.getCurrentLife()).intValue();
                 asteroid2.applyDamages(playerLife);
@@ -221,12 +230,12 @@ public class PlayScreen implements Screen {
         player1.draw(game.batch);
         player2.draw(game.batch);
 
-        // SUN
-        sun.draw(game.batch);
-
         // ASTEROIDS
         asteroid1.draw(game.batch);
         asteroid2.draw(game.batch);
+
+        // SUN
+        sun.draw(game.batch);
 
         // === End rendering ===
         game.batch.end();

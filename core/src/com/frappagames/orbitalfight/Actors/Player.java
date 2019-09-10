@@ -7,6 +7,7 @@ import com.badlogic.gdx.graphics.g2d.TextureRegion;
 import com.badlogic.gdx.math.Circle;
 import com.badlogic.gdx.math.MathUtils;
 import com.badlogic.gdx.math.Vector2;
+import com.badlogic.gdx.utils.TimeUtils;
 import com.frappagames.orbitalfight.OrbitalFight;
 import com.frappagames.orbitalfight.Utils.Assets;
 
@@ -26,6 +27,8 @@ public class Player {
     private static final int EXPLOSION_WIDTH = 64;
     private static final int EXPLOSION_HEIGHT = 64;
     private static final int BOUNDS_RADIUS = 22;
+    public static final int ENERGY_RATE = 10;
+    public static final int SHOOTING_RATE = 300;
 
     private static final int FUEL_RATE = 10;
     private static final int SHIELD_RESTORATION_RATE = 10;
@@ -33,6 +36,7 @@ public class Player {
     private static final int MAX_LIFE = 1500;
     private static final int MAX_SHIELD = 10000;
     private static final int MAX_FUEL = 1000;
+    private static final double MAX_ENERGIE = 100d;
 
     private Float angle;
     private Circle bounds;
@@ -49,15 +53,19 @@ public class Player {
     private double currentLife;
     private double currentShield;
     private double currentFuel;
+    private double currentEnergie;
     private double maxLife;
     private double maxShield;
     private double maxFuel;
+    private double maxEnergie;
+    private long lastShoot = 0;
 
     public Player(int shipNumber) {
         this.shipNumber = shipNumber;
         this.setMaxLife(MAX_LIFE);
         this.setMaxShield(MAX_SHIELD);
         this.setMaxFuel(MAX_FUEL);
+        this.setMaxEnergie(MAX_ENERGIE);
         texture          = shipNumber == 0 ? Assets.ship1 : Assets.ship2;
         shipAnimation    = shipNumber == 0 ? Assets.shipsAnim1 : Assets.shipsAnim2;
         explodeAnimation = Assets.shipExplosion;
@@ -112,6 +120,24 @@ public class Player {
         this.maxFuel = maxFuel;
     }
 
+    public void setCurrentEnergie(double currentEnergie) {
+        this.currentEnergie = currentEnergie;
+    }
+
+    public void setMaxEnergie(double maxEnergie) {
+        this.maxEnergie = maxEnergie;
+    }
+
+    public void laserShot() {
+        long now = TimeUtils.millis();
+
+        if (this.currentEnergie >= ENERGY_RATE && now > this.lastShoot + Player.SHOOTING_RATE) {
+            System.out.println("Joueur " + this.shipNumber + " : Tir de laser");
+            this.currentEnergie -= ENERGY_RATE;
+            this.lastShoot = TimeUtils.millis();
+        }
+    }
+
     private void spawn() {
         stateTime        = 0f;
         angle            = 0f;
@@ -121,6 +147,7 @@ public class Player {
         this.setCurrentLife(MAX_LIFE);
         this.setCurrentShield(MAX_SHIELD);
         this.setCurrentFuel(MAX_FUEL);
+        this.setCurrentEnergie(MAX_ENERGIE);
 
         Random rand = new Random();
         position = new Vector2(rand.nextInt(GAME_WIDTH - SHIP_WIDTH), rand.nextInt(GAME_HEIGHT - SHIP_HEIGHT));
@@ -233,6 +260,15 @@ public class Player {
         if (position.y < -OrbitalFight.GAME_HEIGHT / 2) position.y = OrbitalFight.GAME_HEIGHT / 2;
 
         bounds.setPosition(position);
+
+        // Regain d'énergie.
+        if (this.currentEnergie < MAX_ENERGIE) {
+            this.currentEnergie += delta * ENERGY_RATE;
+
+            if (this.currentEnergie < MAX_ENERGIE) {
+                this.currentEnergie = MAX_ENERGIE;
+            }
+        }
     }
 
     public void setShipStatus(Status shipStatus) {

@@ -61,7 +61,7 @@ public class Asteroid extends AbstractPhysicObject {
                 animation = Assets.asteroid1Animation;
         }
 
-        explosion = Assets.asteroidExplosion;
+        explosion = Assets.shipExplosion;
 
         this.init();
     }
